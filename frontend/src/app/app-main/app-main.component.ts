@@ -273,4 +273,26 @@ export class AppMainComponent implements OnInit, OnDestroy {
     const topic = this.topics.find((t) => t.name === topicName);
     return topic?.quiz || [];
   }
+
+  getCurrentContent(): string {
+    if (!this.selectedTopic) return '';
+
+    switch (this.selectedPanel) {
+      case 'summary':
+        const summary = this.getTopicSummary(this.selectedTopic);
+        return summary?.summary || '';
+      case 'flashcards':
+        const flashcards = this.getTopicFlashcards(this.selectedTopic);
+        return (
+          flashcards
+            ?.map((f: any) => `${f.question}: ${f.answer}`)
+            .join('\n') || ''
+        );
+      case 'quiz':
+        const quiz = this.getTopicQuiz(this.selectedTopic);
+        return quiz?.map((q: any) => q.question).join('\n') || '';
+      default:
+        return '';
+    }
+  }
 }

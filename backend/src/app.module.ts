@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { TopicModule } from './topic/topic.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { AiChatController } from './controllers/ai-chat.controller';
 import { databaseConfig } from './config/database.config';
 
 @Module({
@@ -14,7 +15,7 @@ import { databaseConfig } from './config/database.config';
     TopicModule,
     DashboardModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, AiChatController],
   providers: [AppService],
 })
 export class AppModule {}

@@ -426,5 +426,9 @@
       </div>
     </main>
   </div>
-  <app-ai-chat-fab *ngIf="topics.length > 0" />
+  <app-ai-chat-fab 
+    *ngIf="topics.length > 0" 
+    [currentTopic]="selectedTopic"
+    [currentPanel]="selectedPanel"
+    [currentContent]="getCurrentContent()" />
 </div> 
