@@ -37,6 +37,7 @@ export class AiChatFabComponent implements OnInit, OnDestroy {
   @Input() currentContent: string = '';
 
   isOpen = false;
+  isModalOpen = false;
   isLoading = false;
   messages: ChatMessage[] = [];
   newMessage = '';
@@ -105,6 +106,24 @@ export class AiChatFabComponent implements OnInit, OnDestroy {
 
   closeChat() {
     this.aiAssistant.closeChat();
+    this.isModalOpen = false;
+  }
+
+  openModal() {
+    this.isModalOpen = true;
+    this.isOpen = true;
+    this.aiAssistant.openChat();
+  }
+
+  closeModal() {
+    this.isModalOpen = false;
+    this.aiAssistant.closeChat();
+  }
+
+  minimizeModal() {
+    this.isModalOpen = false;
+    // Keep the chat open in floating mode
+    this.aiAssistant.openChat();
   }
 
   sendMessage(message?: string) {
@@ -154,6 +173,13 @@ export class AiChatFabComponent implements OnInit, OnDestroy {
     return message.sender === 'user'
       ? `${baseClass} bg-blue-500 text-white ml-8`
       : `${baseClass} bg-gray-100 text-gray-800 mr-8`;
+  }
+
+  getModalMessageClass(message: ChatMessage): string {
+    const baseClass = 'flex gap-4 p-6 rounded-2xl transition-all duration-200';
+    return message.sender === 'user'
+      ? `${baseClass} bg-blue-500 text-white ml-12`
+      : `${baseClass} bg-gray-100 text-gray-800 mr-12`;
   }
 
   getTimeString(date: Date): string {

@@ -24,62 +24,159 @@
   </div>
 
   <!-- Main Content -->
-  <div class="relative z-10">
+  <div class="relative z-10 py-4">
+    <div class="w-full max-w-none mx-auto">
+      
+      <!-- Compact Header with Flashcard Info -->
+      <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 mb-6 overflow-hidden">
+        <!-- Header Section -->
+        <div class="bg-gradient-to-r from-cyan-600 to-blue-600 text-white p-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                <span class="pi pi-lightbulb text-xl"></span>
+              </div>
+              <div>
+                <h1 class="text-2xl font-bold">Flashcards</h1>
+                <p class="text-cyan-100 text-sm">Interactive learning cards for better retention</p>
+              </div>
+            </div>
+            
+            <!-- Progress Badge -->
+            <div class="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2">
+              <div class="text-center">
+                <div class="text-xs text-cyan-100">Progress</div>
+                <div class="text-xl font-bold">{{ currentCardIndex + 1 }}/{{ flashcards.length }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
 
+        <!-- Flashcard Stats Cards -->
+        <div class="grid grid-cols-3 divide-x divide-gray-200/50">
+          <!-- Total Cards -->
+          <div class="p-4 text-center hover:bg-gray-50/50 transition-colors">
+            <div class="flex items-center justify-center gap-2 mb-2">
+              <span class="text-lg">📚</span>
+              <h3 class="text-sm font-semibold text-gray-700">Total Cards</h3>
+            </div>
+            <div class="text-lg font-bold text-gray-900 mb-1">
+              {{ flashcards.length }}
+            </div>
+            <div class="text-xs text-gray-500">available</div>
+          </div>
 
-    <!-- Flashcards Content with Enhanced Card -->
-    <div class="bg-white/60 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/20">
-      <div class="carousel-container">
-        <p-carousel 
-          [value]="flashcards" 
-          [numVisible]="1" 
-          [numScroll]="1"
-          [circular]="false"
-          [showNavigators]="false"
-          (onChange)="onCarouselChange($event)"
-          #carousel>
-          <ng-template pTemplate="item" let-card let-i="index">
-            <div class="flashcard-wrapper" (click)="flipCard(i); $event.stopPropagation()">
-              <div class="flashcard" [class.flipped]="isFlipped(i)">
-                <!-- Front of card (Question) -->
-                <div class="flashcard-front">
-                  <div class="card-content">
-                    <div class="question-icon text-3xl mb-2">❓</div>
-                    <div class="question-text font-semibold text-lg mb-2">{{ card.question }}</div>
-                    <div class="click-hint text-xs text-cyan-100/80">Click to reveal answer</div>
+          <!-- Remembered Cards -->
+          <div class="p-4 text-center hover:bg-gray-50/50 transition-colors">
+            <div class="flex items-center justify-center gap-2 mb-2">
+              <span class="text-lg">✅</span>
+              <h3 class="text-sm font-semibold text-gray-700">Remembered</h3>
+            </div>
+            <div class="text-lg font-bold text-gray-900 mb-1">
+              {{ getRememberedCardsCount() }}
+            </div>
+            <div class="text-xs text-gray-500">cards</div>
+          </div>
+
+          <!-- Mastery Level -->
+          <div class="p-4 text-center hover:bg-gray-50/50 transition-colors">
+            <div class="flex items-center justify-center gap-2 mb-2">
+              <span class="text-lg">🎯</span>
+              <h3 class="text-sm font-semibold text-gray-700">Mastery</h3>
+            </div>
+            <div class="text-lg font-bold text-gray-900 mb-1">
+              {{ getMasteryLevel() }}
+            </div>
+            <div class="text-xs text-gray-500">level</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Flashcards Content with Enhanced Card -->
+      <div class="bg-white/60 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/20">
+        <div class="carousel-container">
+          <p-carousel 
+            [value]="flashcards" 
+            [numVisible]="1" 
+            [numScroll]="1"
+            [circular]="false"
+            [showNavigators]="false"
+            (onChange)="onCarouselChange($event)"
+            #carousel>
+            <ng-template pTemplate="item" let-card let-i="index">
+              <div class="flashcard-wrapper" (click)="flipCard(i); $event.stopPropagation()">
+                <div class="flashcard" [class.flipped]="isFlipped(i)">
+                  <!-- Front of card (Question) -->
+                  <div class="flashcard-front">
+                    <div class="card-content">
+                      <div class="question-icon text-3xl mb-2">❓</div>
+                      <div class="question-text font-semibold text-lg mb-2">{{ card.question }}</div>
+                      <div class="click-hint text-xs text-cyan-100/80">Click to reveal answer</div>
+                    </div>
+                  </div>
+                  
+                  <!-- Back of card (Answer) -->
+                  <div class="flashcard-back">
+                    <div class="card-content">
+                      <div class="answer-icon text-3xl mb-2">💡</div>
+                      <div class="answer-text font-semibold text-lg mb-2">{{ card.answer }}</div>
+                      <div class="click-hint text-xs text-cyan-100/80">Click to see question</div>
+                    </div>
                   </div>
                 </div>
                 
-                <!-- Back of card (Answer) -->
-                <div class="flashcard-back">
-                  <div class="card-content">
-                    <div class="answer-icon text-3xl mb-2">💡</div>
-                    <div class="answer-text font-semibold text-lg mb-2">{{ card.answer }}</div>
-                    <div class="click-hint text-xs text-cyan-100/80">Click to see question</div>
+                <!-- Remembered Status Indicator -->
+                <div class="remembered-status absolute top-4 right-4 z-10">
+                  <div *ngIf="isRemembered(i)" 
+                       class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-full w-8 h-8 flex items-center justify-center shadow-lg">
+                    <span class="pi pi-check text-sm"></span>
                   </div>
                 </div>
               </div>
-            </div>
-          </ng-template>
-        </p-carousel>
+            </ng-template>
+          </p-carousel>
 
-        <!-- Manual Navigation Controls moved below cards -->
-        <div class="manual-navigation mt-4 flex justify-center items-center gap-4">
-          <button 
-            (click)="goToPrevious()" 
-            [disabled]="currentCardIndex === 0"
-            class="nav-btn flex items-center gap-2">
-            <span class="pi pi-chevron-left"></span>
-            <span>Previous</span>
-          </button>
-          <span class="nav-info font-medium text-[#1e40af]">Card {{ currentCardIndex + 1 }} of {{ flashcards.length }}</span>
-          <button 
-            (click)="goToNext()" 
-            [disabled]="currentCardIndex === flashcards.length - 1"
-            class="nav-btn flex items-center gap-2">
-            <span>Next</span>
-            <span class="pi pi-chevron-right"></span>
-          </button>
+          <!-- Remembered Controls -->
+          <div class="remembered-controls mt-6 flex justify-center items-center gap-4">
+            <button 
+              (click)="markAsForgotten(currentCardIndex)"
+              [disabled]="!isCurrentCardRemembered()"
+              class="flex items-center gap-2 px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-red-200">
+              <span class="pi pi-times"></span>
+              <span>Forgot</span>
+            </button>
+            
+            <div class="text-sm text-gray-600 font-medium">
+              {{ getCurrentCardRememberedStatus() }}
+            </div>
+            
+            <button 
+              (click)="markAsRemembered(currentCardIndex)"
+              [disabled]="isCurrentCardRemembered()"
+              class="flex items-center gap-2 px-4 py-2 bg-green-100 hover:bg-green-100 text-green-600 rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed border border-green-200">
+              <span class="pi pi-check"></span>
+              <span>Remembered</span>
+            </button>
+          </div>
+
+          <!-- Manual Navigation Controls moved below cards -->
+          <div class="manual-navigation mt-4 flex justify-center items-center gap-4">
+            <button 
+              (click)="goToPrevious()" 
+              [disabled]="currentCardIndex === 0"
+              class="nav-btn flex items-center gap-2">
+              <span class="pi pi-chevron-left"></span>
+              <span>Previous</span>
+            </button>
+            <span class="nav-info font-medium text-[#1e40af]">Card {{ currentCardIndex + 1 }} of {{ flashcards.length }}</span>
+            <button 
+              (click)="goToNext()" 
+              [disabled]="currentCardIndex === flashcards.length - 1"
+              class="nav-btn flex items-center gap-2">
+              <span>Next</span>
+              <span class="pi pi-chevron-right"></span>
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -16,6 +16,37 @@
   animation: fadeIn 0.3s ease-out;
 }
 
+/* Modal animations */
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes backdropFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal backdrop */
+.modal-backdrop {
+  animation: backdropFadeIn 0.2s ease-out;
+}
+
+/* Modal content */
+.modal-content {
+  animation: modalFadeIn 0.3s ease-out;
+}
+
 /* Pulse animation for unread badge */
 @keyframes pulse {
   0%, 100% {
@@ -112,6 +143,36 @@ p-scrollPanel ::ng-deep .p-scrollpanel-bar:hover {
   transform: translateY(-1px);
 }
 
+/* Modal specific styles */
+.modal-overlay {
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-container {
+  max-height: 90vh;
+  max-width: 90vw;
+}
+
+/* Modal input enhancements */
+.modal-input {
+  transition: all 0.3s ease;
+}
+
+.modal-input:focus {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Modal button enhancements */
+.modal-button {
+  transition: all 0.2s ease;
+}
+
+.modal-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .chat-interface {
@@ -124,6 +185,20 @@ p-scrollPanel ::ng-deep .p-scrollpanel-bar:hover {
   .fab-button {
     bottom: 1rem;
     right: 1rem;
+  }
+
+  .modal-container {
+    width: 95vw;
+    height: 95vh;
+    margin: 2.5vh auto;
+  }
+
+  .modal-content {
+    padding: 1rem;
+  }
+
+  .modal-input {
+    font-size: 16px; /* Prevents zoom on iOS */
   }
 }
 
@@ -153,13 +228,19 @@ p-scrollPanel ::ng-deep .p-scrollpanel-bar:hover {
   .input-field::placeholder {
     color: #9ca3af;
   }
+
+  .modal-container {
+    background: #1f2937;
+    border-color: #374151;
+  }
 }
 
 /* Focus states for accessibility */
 .fab-button:focus,
 .input-field:focus,
 .suggestion-card:focus,
-.quick-action-btn:focus {
+.quick-action-btn:focus,
+.modal-button:focus {
   outline: 2px solid #3b82f6;
   outline-offset: 2px;
 }
@@ -244,4 +325,50 @@ p-scrollPanel ::ng-deep .p-scrollpanel-bar:hover {
   padding: 12px;
   border-radius: 8px;
   margin: 8px 0;
+}
+
+/* Modal transition effects */
+.modal-enter {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.modal-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.2s ease-out, transform 0.3s ease-out;
+}
+
+.modal-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.modal-exit-active {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.2s ease-in, transform 0.3s ease-in;
+}
+
+/* Enhanced modal suggestions */
+.modal-suggestion {
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.modal-suggestion:hover {
+  transform: translateY(-4px);
+  border-color: #3b82f6;
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+}
+
+/* Modal quick actions */
+.modal-quick-action {
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.modal-quick-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 } 

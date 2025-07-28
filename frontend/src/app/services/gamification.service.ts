@@ -26,6 +26,8 @@ export interface UserStats {
   totalTopics: number;
   totalStudyTime: number;
   totalQuizzesTaken: number;
+  totalFlashcardsReviewed: number;
+  totalFlashcardsRemembered: number;
   currentStreak: number;
   longestStreak: number;
   achievements: Achievement[];
@@ -51,6 +53,8 @@ export class GamificationService {
     totalTopics: 0,
     totalStudyTime: 0,
     totalQuizzesTaken: 0,
+    totalFlashcardsReviewed: 0,
+    totalFlashcardsRemembered: 0,
     currentStreak: 0,
     longestStreak: 0,
     achievements: [],
@@ -180,6 +184,8 @@ export class GamificationService {
       totalTopics: backendStats.totalTopics || 0,
       totalStudyTime: backendStats.totalStudyTime || 0,
       totalQuizzesTaken: backendStats.totalQuizzesTaken || 0,
+      totalFlashcardsReviewed: backendStats.totalFlashcardsReviewed || 0,
+      totalFlashcardsRemembered: 0, // Frontend-only tracking for now
       currentStreak: backendStats.currentStreak || 0,
       longestStreak: backendStats.longestStreak || 0,
       achievements: this.convertBackendAchievements(backendStats.achievements),
@@ -236,6 +242,8 @@ export class GamificationService {
       totalTopics: 0,
       totalStudyTime: 0,
       totalQuizzesTaken: 0,
+      totalFlashcardsReviewed: 0,
+      totalFlashcardsRemembered: 0,
       currentStreak: 0,
       longestStreak: 0,
       achievements: [],
@@ -336,38 +344,80 @@ export class GamificationService {
 
   // Quiz Tracking
   addQuizCompletion(score: number): void {
-    const pointsEarned = Math.floor(score / 10) * 10; // 10 points per 10% score
+    const currentStats = this.userStatsSubject.value;
+    const newStats = { ...currentStats };
 
+    newStats.totalQuizzesTaken++;
+
+    // Add points based on score
+    let pointsEarned = 0;
+    if (score >= 90) {
+      pointsEarned = 50;
+      this.unlockAchievement('quiz_expert');
+    } else if (score >= 80) {
+      pointsEarned = 40;
+      this.unlockAchievement('quiz_advanced');
+    } else if (score >= 70) {
+      pointsEarned = 30;
+      this.unlockAchievement('quiz_intermediate');
+    } else if (score >= 60) {
+      pointsEarned = 20;
+      this.unlockAchievement('quiz_beginner');
+    } else {
+      pointsEarned = 10;
+    }
+
+    newStats.totalPoints += pointsEarned;
+
+    // Check for level up
+    const newLevel = this.calculateLevel(newStats.totalPoints);
+    if (newLevel > newStats.level) {
+      newStats.level = newLevel;
+      this.showLevelUpNotification(newLevel);
+    }
+
+    this.userStatsSubject.next(newStats);
+    this.showPointsNotification(pointsEarned, `Quiz completed (${score}%)`);
+
+    // Update backend
     this.backendService
-      .recordStudySession({
-        sessionType: 'quiz',
-        pointsEarned,
-        sessionData: {
-          score,
-          passed: score >= 70, // Consider 70% as passing
-        },
-      })
-      .subscribe({
-        next: () => {
-          // Stats will be updated via the backend service
-          this.backendService.getUserStats().subscribe((backendStats) => {
-            const convertedStats =
-              this.convertBackendToFrontendStats(backendStats);
-            this.userStatsSubject.next(convertedStats);
-          });
-        },
-        error: (error) => {
-          console.error('Failed to record quiz completion:', error);
-          // Fallback to local update
-          const currentStats = this.userStatsSubject.value;
-          const newQuizCount = currentStats.totalQuizzesTaken + 1;
-          const newStats: UserStats = {
-            ...currentStats,
-            totalQuizzesTaken: newQuizCount,
-          };
-          this.userStatsSubject.next(newStats);
-        },
-      });
+      .addPoints(pointsEarned, `Quiz completed (${score}%)`)
+      .subscribe();
+  }
+
+  addFlashcardRemembered(): void {
+    const currentStats = this.userStatsSubject.value;
+    const newStats = { ...currentStats };
+
+    newStats.totalFlashcardsRemembered++;
+
+    // Add points for remembering a flashcard
+    const pointsEarned = 10;
+    newStats.totalPoints += pointsEarned;
+
+    // Check for level up
+    const newLevel = this.calculateLevel(newStats.totalPoints);
+    if (newLevel > newStats.level) {
+      newStats.level = newLevel;
+      this.showLevelUpNotification(newLevel);
+    }
+
+    // Check for flashcard achievements
+    if (newStats.totalFlashcardsRemembered === 10) {
+      this.unlockAchievement('flashcard_beginner');
+    } else if (newStats.totalFlashcardsRemembered === 50) {
+      this.unlockAchievement('flashcard_intermediate');
+    } else if (newStats.totalFlashcardsRemembered === 100) {
+      this.unlockAchievement('flashcard_expert');
+    }
+
+    this.userStatsSubject.next(newStats);
+    this.showPointsNotification(pointsEarned, 'Flashcard remembered');
+
+    // Update backend (only tracked locally for now)
+    console.log(
+      `Flashcard remembered. Total remembered: ${newStats.totalFlashcardsRemembered}`
+    );
   }
 
   // Topic Tracking
@@ -500,6 +550,7 @@ export class GamificationService {
             totalTopics: localStats.totalTopics || 0,
             totalStudyTime: localStats.totalStudyTime || 0,
             totalQuizzesTaken: localStats.totalQuizzesTaken || 0,
+            totalFlashcardsReviewed: localStats.totalFlashcardsReviewed || 0,
             currentStreak: localStats.currentStreak || 0,
             longestStreak: localStats.longestStreak || 0,
           })

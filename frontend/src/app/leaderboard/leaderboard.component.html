@@ -25,24 +25,77 @@
   </div>
 
   <!-- Main Content -->
-  <div class="relative z-10 p-4">
+  <div class="relative z-10 py-4">
     <div class="w-full max-w-none mx-auto">
       
-      <!-- Simple and Compact Header -->
-      <div class="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/20 mb-6 text-center">
-        <div class="flex items-center justify-center gap-3 mb-4">
-          <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center shadow-md">
-            <span class="text-xl">🏆</span>
+      <!-- Compact Header with Integrated Stats -->
+      <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 mb-6 overflow-hidden">
+        <!-- Header Section -->
+        <div class="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                <span class="text-xl">🏆</span>
+              </div>
+              <div>
+                <h1 class="text-2xl font-bold">Leaderboard</h1>
+                <p class="text-blue-100 text-sm">See how you rank among other learners</p>
+              </div>
+            </div>
+            
+            <!-- User Rank Badge -->
+            <div *ngIf="getCurrentUserRank() > 0" class="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2">
+              <div class="text-center">
+                <div class="text-xs text-blue-100">Your Rank</div>
+                <div class="text-xl font-bold">#{{ getCurrentUserRank() }}</div>
+              </div>
+            </div>
           </div>
-          <h1 class="text-3xl font-bold text-gray-900">Leaderboard</h1>
         </div>
-        
-        <p class="text-gray-600 mb-4">See how you rank among other learners</p>
-        
-        <!-- Simple User Rank -->
-        <div *ngIf="getCurrentUserRank() > 0" class="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-xl px-4 py-2 shadow-md">
-          <span class="text-sm font-medium">Your Rank:</span>
-          <span class="text-xl font-bold">#{{ getCurrentUserRank() }}</span>
+
+        <!-- Compact Stats Cards -->
+        <div *ngIf="!loading && !error" class="grid grid-cols-3 divide-x divide-gray-200/50">
+          <!-- Top Performer -->
+          <div class="p-4 text-center hover:bg-gray-50/50 transition-colors">
+            <div class="flex items-center justify-center gap-2 mb-2">
+              <span class="text-lg">🥇</span>
+              <h3 class="text-sm font-semibold text-gray-700">Top Performer</h3>
+            </div>
+            <div class="text-lg font-bold text-gray-900 mb-1" *ngIf="leaderboardUsers.length > 0">
+              {{ leaderboardUsers[0].firstName }} {{ leaderboardUsers[0].lastName }}
+            </div>
+            <div class="text-xs text-gray-500" *ngIf="leaderboardUsers.length > 0">
+              {{ leaderboardUsers[0].totalPoints }} points
+            </div>
+          </div>
+
+          <!-- Longest Streak -->
+          <div class="p-4 text-center hover:bg-gray-50/50 transition-colors">
+            <div class="flex items-center justify-center gap-2 mb-2">
+              <span class="text-lg">🔥</span>
+              <h3 class="text-sm font-semibold text-gray-700">Longest Streak</h3>
+            </div>
+            <div class="text-lg font-bold text-gray-900 mb-1" *ngIf="getLongestStreakUser()">
+              {{ getLongestStreakUser()?.firstName }} {{ getLongestStreakUser()?.lastName }}
+            </div>
+            <div class="text-xs text-gray-500" *ngIf="getLongestStreakUser()">
+              {{ getLongestStreakUser()?.currentStreak }} days
+            </div>
+          </div>
+
+          <!-- Study Champion -->
+          <div class="p-4 text-center hover:bg-gray-50/50 transition-colors">
+            <div class="flex items-center justify-center gap-2 mb-2">
+              <span class="text-lg">📚</span>
+              <h3 class="text-sm font-semibold text-gray-700">Study Champion</h3>
+            </div>
+            <div class="text-lg font-bold text-gray-900 mb-1" *ngIf="getMostStudyTimeUser()">
+              {{ getMostStudyTimeUser()?.firstName }} {{ getMostStudyTimeUser()?.lastName }}
+            </div>
+            <div class="text-xs text-gray-500" *ngIf="getMostStudyTimeUser()">
+              {{ formatStudyTime(getMostStudyTimeUser()?.totalStudyTime || 0) }}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -61,39 +114,6 @@
             <span class="text-red-600 text-2xl">⚠️</span>
           </div>
           <p class="text-red-600 font-medium text-lg">{{ error }}</p>
-        </div>
-      </div>
-
-      <!-- Enhanced Stats Cards -->
-      <div *ngIf="!loading && !error" class="grid md:grid-cols-3 gap-6 mb-8">
-        <!-- Top Performer -->
-        <div class="bg-white/80 backdrop-blur-sm rounded-3xl p-6 text-white shadow-2xl border border-white/20 bg-gradient-to-br from-yellow-400 to-orange-500 hover:shadow-3xl transition-all duration-300 hover:-translate-y-2">
-          <div class="flex items-center gap-3 mb-4">
-            <span class="text-2xl">🥇</span>
-            <h3 class="text-lg font-bold">Top Performer</h3>
-          </div>
-          <div class="text-2xl font-bold mb-2" *ngIf="leaderboardUsers.length > 0">{{ leaderboardUsers[0].firstName }} {{ leaderboardUsers[0].lastName }}</div>
-          <div class="text-yellow-100 text-sm" *ngIf="leaderboardUsers.length > 0">{{ leaderboardUsers[0].totalPoints }} points</div>
-        </div>
-
-        <!-- Longest Streak -->
-        <div class="bg-white/80 backdrop-blur-sm rounded-3xl p-6 text-white shadow-2xl border border-white/20 bg-gradient-to-br from-blue-500 to-cyan-500 hover:shadow-3xl transition-all duration-300 hover:-translate-y-2">
-          <div class="flex items-center gap-3 mb-4">
-            <span class="text-2xl">🔥</span>
-            <h3 class="text-lg font-bold">Longest Streak</h3>
-          </div>
-          <div class="text-2xl font-bold mb-2" *ngIf="getLongestStreakUser()">{{ getLongestStreakUser()?.firstName }} {{ getLongestStreakUser()?.lastName }}</div>
-          <div class="text-blue-100 text-sm" *ngIf="getLongestStreakUser()">{{ getLongestStreakUser()?.currentStreak }} days</div>
-        </div>
-
-        <!-- Study Champion -->
-        <div class="bg-white/80 backdrop-blur-sm rounded-3xl p-6 text-white shadow-2xl border border-white/20 bg-gradient-to-br from-green-500 to-emerald-500 hover:shadow-3xl transition-all duration-300 hover:-translate-y-2">
-          <div class="flex items-center gap-3 mb-4">
-            <span class="text-2xl">📚</span>
-            <h3 class="text-lg font-bold">Study Champion</h3>
-          </div>
-          <div class="text-2xl font-bold mb-2" *ngIf="getMostStudyTimeUser()">{{ getMostStudyTimeUser()?.firstName }} {{ getMostStudyTimeUser()?.lastName }}</div>
-          <div class="text-green-100 text-sm" *ngIf="getMostStudyTimeUser()">{{ formatStudyTime(getMostStudyTimeUser()?.totalStudyTime || 0) }}</div>
         </div>
       </div>
 
@@ -173,3 +193,5 @@
       </div>
 
     </div>
+  </div>
+</div>

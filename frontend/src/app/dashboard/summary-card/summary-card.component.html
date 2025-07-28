@@ -24,13 +24,79 @@
   </div>
 
   <!-- Main Content -->
-  <div class="relative z-10">
+  <div class="relative z-10 py-4">
+    <div class="w-full max-w-none mx-auto">
+      
+      <!-- Compact Header with Topic Info -->
+      <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 mb-6 overflow-hidden">
+        <!-- Header Section -->
+        <div class="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                <span class="pi pi-file-text text-xl"></span>
+              </div>
+              <div>
+                <h1 class="text-2xl font-bold">Summary</h1>
+                <p class="text-blue-100 text-sm">AI-generated key insights and main points</p>
+              </div>
+            </div>
+            
+            <!-- Study Stats Badge -->
+            <div class="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2">
+              <div class="text-center">
+                <div class="text-xs text-blue-100">Study Time</div>
+                <div class="text-xl font-bold">{{ getStudyTime() }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
 
+        <!-- Topic Info Cards -->
+        <div class="grid grid-cols-3 divide-x divide-gray-200/50">
+          <!-- Key Points -->
+          <div class="p-4 text-center hover:bg-gray-50/50 transition-colors">
+            <div class="flex items-center justify-center gap-2 mb-2">
+              <span class="text-lg">📝</span>
+              <h3 class="text-sm font-semibold text-gray-700">Key Points</h3>
+            </div>
+            <div class="text-lg font-bold text-gray-900 mb-1">
+              {{ getKeyPointsCount() }}
+            </div>
+            <div class="text-xs text-gray-500">extracted</div>
+          </div>
 
-    <!-- Summary Content with Enhanced Card -->
-    <div class="bg-white/60 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/20">
-      <div class="summary-container">
-        <div [innerHTML]="renderedSummary"></div>
+          <!-- Reading Time -->
+          <div class="p-4 text-center hover:bg-gray-50/50 transition-colors">
+            <div class="flex items-center justify-center gap-2 mb-2">
+              <span class="text-lg">⏱️</span>
+              <h3 class="text-sm font-semibold text-gray-700">Reading Time</h3>
+            </div>
+            <div class="text-lg font-bold text-gray-900 mb-1">
+              {{ getReadingTime() }}
+            </div>
+            <div class="text-xs text-gray-500">minutes</div>
+          </div>
+
+          <!-- Comprehension -->
+          <div class="p-4 text-center hover:bg-gray-50/50 transition-colors">
+            <div class="flex items-center justify-center gap-2 mb-2">
+              <span class="text-lg">🧠</span>
+              <h3 class="text-sm font-semibold text-gray-700">Comprehension</h3>
+            </div>
+            <div class="text-lg font-bold text-gray-900 mb-1">
+              {{ getComprehensionLevel() }}
+            </div>
+            <div class="text-xs text-gray-500">level</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Summary Content with Enhanced Card -->
+      <div class="bg-white/60 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/20">
+        <div class="summary-container">
+          <div [innerHTML]="renderedSummary"></div>
+        </div>
       </div>
     </div>
   </div>

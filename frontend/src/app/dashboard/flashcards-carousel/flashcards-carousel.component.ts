@@ -26,20 +26,25 @@ export class FlashcardsCarouselComponent
   @ViewChild('carousel') carousel: any;
 
   flippedCards: { [key: number]: boolean } = {};
+  rememberedCards: { [key: number]: boolean } = {};
   currentCardIndex = 0;
   private navigationTimer: any;
   private lastKnownIndex = 0;
   private studyTimer: Subscription | null = null;
   private studyStartTime: number = 0;
   private reviewedCards: Set<number> = new Set();
+  private rememberedCount = 0;
 
   constructor(private gamificationService: GamificationService) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['flashcards']) {
       this.resetFlippedCards();
+      this.resetRememberedCards();
       this.lastKnownIndex = 0;
       this.currentCardIndex = 0;
+      this.reviewedCards.clear();
+      this.rememberedCount = 0;
     }
   }
 
@@ -70,7 +75,7 @@ export class FlashcardsCarouselComponent
         if (currentPage !== this.lastKnownIndex) {
           this.lastKnownIndex = currentPage;
           this.currentCardIndex = currentPage;
-          this.flippedCards = {};
+          this.flippedCards = {}; // Only reset flipped state, keep remembered state
         }
       }
     }, 50);
@@ -79,6 +84,7 @@ export class FlashcardsCarouselComponent
   flipCard(index: number) {
     this.flippedCards[index] = !this.flippedCards[index];
     this.reviewedCards.add(index);
+
     // If all cards reviewed, record session
     if (
       this.reviewedCards.size === this.flashcards.length &&
@@ -92,14 +98,56 @@ export class FlashcardsCarouselComponent
     return this.flippedCards[index] === true;
   }
 
+  markAsRemembered(index: number) {
+    if (!this.rememberedCards[index]) {
+      this.rememberedCards[index] = true;
+      this.rememberedCount++;
+
+      // Add gamification points for remembering a card
+      this.gamificationService.addFlashcardRemembered();
+
+      // Check if this is a milestone (every 5 cards remembered)
+      if (this.rememberedCount % 5 === 0) {
+        this.gamificationService.addPoints(
+          25,
+          `Remembered ${this.rememberedCount} flashcards`
+        );
+      }
+    }
+  }
+
+  markAsForgotten(index: number) {
+    if (this.rememberedCards[index]) {
+      this.rememberedCards[index] = false;
+      this.rememberedCount--;
+    }
+  }
+
+  isRemembered(index: number): boolean {
+    return this.rememberedCards[index] === true;
+  }
+
+  isCurrentCardRemembered(): boolean {
+    return this.isRemembered(this.currentCardIndex);
+  }
+
+  getCurrentCardRememberedStatus(): string {
+    return this.isCurrentCardRemembered() ? 'Remembered' : 'Not Remembered';
+  }
+
   resetFlippedCards() {
     this.flippedCards = {};
+  }
+
+  resetRememberedCards() {
+    this.rememberedCards = {};
+    this.rememberedCount = 0;
   }
 
   onCarouselChange(event: any) {
     this.currentCardIndex = event.index;
     this.lastKnownIndex = event.index;
-    this.flippedCards = {};
+    this.flippedCards = {}; // Only reset flipped state, keep remembered state
   }
 
   goToNext() {
@@ -108,6 +156,7 @@ export class FlashcardsCarouselComponent
       this.currentCardIndex++;
       this.lastKnownIndex = this.currentCardIndex;
       this.carousel.page = this.currentCardIndex;
+      // Don't reset remembered cards when navigating - they should persist
     }
   }
 
@@ -117,7 +166,33 @@ export class FlashcardsCarouselComponent
       this.currentCardIndex--;
       this.lastKnownIndex = this.currentCardIndex;
       this.carousel.page = this.currentCardIndex;
+      // Don't reset remembered cards when navigating - they should persist
     }
+  }
+
+  // Header methods
+  getStudiedCardsCount(): number {
+    return this.reviewedCards.size;
+  }
+
+  getRememberedCardsCount(): number {
+    return this.rememberedCount;
+  }
+
+  getMasteryLevel(): string {
+    if (this.flashcards.length === 0) return 'Beginner';
+
+    const studiedPercentage =
+      (this.reviewedCards.size / this.flashcards.length) * 100;
+    const rememberedPercentage =
+      (this.rememberedCount / this.flashcards.length) * 100;
+
+    // Consider both studied and remembered cards for mastery level
+    if (rememberedPercentage >= 80) return 'Expert';
+    if (rememberedPercentage >= 60) return 'Advanced';
+    if (studiedPercentage >= 80) return 'Intermediate';
+    if (studiedPercentage >= 40) return 'Beginner';
+    return 'New';
   }
 
   private startStudyTimer() {
@@ -150,12 +225,22 @@ export class FlashcardsCarouselComponent
   }
 
   private recordFlashcardSession() {
-    // The gamification service now handles recording sessions to the backend
-    // No need to call dashboard service separately
-    console.log(
-      'Flashcard session completed:',
-      this.flashcards.length,
-      'cards reviewed'
-    );
+    // Record flashcard session with remembered cards data
+    const sessionData = {
+      totalCards: this.flashcards.length,
+      reviewedCards: this.reviewedCards.size,
+      rememberedCards: this.rememberedCount,
+      studyTime: Math.floor((Date.now() - this.studyStartTime) / 60000),
+    };
+
+    console.log('Flashcard session completed:', sessionData);
+
+    // Add bonus points for high retention rate
+    const retentionRate = (this.rememberedCount / this.flashcards.length) * 100;
+    if (retentionRate >= 80) {
+      this.gamificationService.addPoints(50, 'High retention rate');
+    } else if (retentionRate >= 60) {
+      this.gamificationService.addPoints(25, 'Good retention rate');
+    }
   }
 }

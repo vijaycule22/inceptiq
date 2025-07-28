@@ -24,135 +24,201 @@
   </div>
 
   <!-- Main Content -->
-  <div class="relative z-10">
-
-
-    <!-- Quiz Content with Enhanced Card -->
-    <div class="bg-white/60 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/20">
-      <!-- Quiz Header (Progress) -->
-      <div class="quiz-header">
-        <div class="quiz-info">
-          <span class="question-counter">Question {{ currentQuestionIndex + 1 }} of {{ totalQuestions }}</span>
-          <span class="progress-info">{{ getAnsweredCount() }}/{{ totalQuestions }} answered</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" [style.width.%]="getProgressPercentage()"></div>
-        </div>
-      </div>
-
-      <!-- Quiz Results -->
-      <div *ngIf="quizCompleted" class="quiz-results">
-        <div class="results-content">
-          <div class="score-icon">🎯</div>
-          <h3 class="score-message">{{ getScoreMessage() }}</h3>
-          <p class="score-text">You scored {{ score }} out of {{ totalQuestions }}</p>
-          <div class="score-percentage">{{ getScorePercentage() }}%</div>
-        </div>
-        
-        <!-- Review Toggle -->
-        <div class="review-section">
-          <button class="review-toggle-btn" (click)="toggleReview()">
-            <span class="pi" [ngClass]="showReview ? 'pi-eye-slash' : 'pi-eye'" style="font-size:1rem;"></span>
-            <span>{{ showReview ? 'Hide Review' : 'Show Review' }}</span>
-          </button>
-          
-          <!-- Review Answers -->
-          <div *ngIf="showReview" class="review-answers">
-            <h4 class="review-title">Review Your Answers:</h4>
-            <div *ngFor="let question of quiz; let i = index" class="review-item" 
-                 [ngClass]="isCorrectAnswer(question, userAnswers[i]) ? 'correct' : 'incorrect'">
-              <p class="review-question">{{ i + 1 }}. {{ question.question }}</p>
-              <p class="review-answer">Your answer: <span class="user-answer">{{ userAnswers[i] || 'Not answered' }}</span></p>
-              <p class="review-answer">Correct answer: <span class="correct-answer">{{ question.answer }}</span></p>
+  <div class="relative z-10 py-4">
+    <div class="w-full max-w-none mx-auto">
+      
+      <!-- Compact Header with Quiz Info -->
+      <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 mb-6 overflow-hidden">
+        <!-- Header Section -->
+        <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                <span class="pi pi-question-circle text-xl"></span>
+              </div>
+              <div>
+                <h1 class="text-2xl font-bold">Quiz</h1>
+                <p class="text-purple-100 text-sm">Test your knowledge with interactive questions</p>
+              </div>
+            </div>
+            
+            <!-- Quiz Progress Badge -->
+            <div class="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2">
+              <div class="text-center">
+                <div class="text-xs text-purple-100">Progress</div>
+                <div class="text-xl font-bold">{{ getAnsweredCount() }}/{{ totalQuestions }}</div>
+              </div>
             </div>
           </div>
         </div>
-        
-        <button class="reset-btn flex items-center gap-2" (click)="resetQuiz()">
-          <span class="pi pi-refresh"></span>
-          <span>Take Quiz Again</span>
-        </button>
+
+        <!-- Quiz Stats Cards -->
+        <div class="grid grid-cols-3 divide-x divide-gray-200/50">
+          <!-- Total Questions -->
+          <div class="p-4 text-center hover:bg-gray-50/50 transition-colors">
+            <div class="flex items-center justify-center gap-2 mb-2">
+              <span class="text-lg">📝</span>
+              <h3 class="text-sm font-semibold text-gray-700">Questions</h3>
+            </div>
+            <div class="text-lg font-bold text-gray-900 mb-1">
+              {{ totalQuestions }}
+            </div>
+            <div class="text-xs text-gray-500">total</div>
+          </div>
+
+          <!-- Answered Questions -->
+          <div class="p-4 text-center hover:bg-gray-50/50 transition-colors">
+            <div class="flex items-center justify-center gap-2 mb-2">
+              <span class="text-lg">✅</span>
+              <h3 class="text-sm font-semibold text-gray-700">Answered</h3>
+            </div>
+            <div class="text-lg font-bold text-gray-900 mb-1">
+              {{ getAnsweredCount() }}
+            </div>
+            <div class="text-xs text-gray-500">questions</div>
+          </div>
+
+          <!-- Performance -->
+          <div class="p-4 text-center hover:bg-gray-50/50 transition-colors">
+            <div class="flex items-center justify-center gap-2 mb-2">
+              <span class="text-lg">🎯</span>
+              <h3 class="text-sm font-semibold text-gray-700">Performance</h3>
+            </div>
+            <div class="text-lg font-bold text-gray-900 mb-1">
+              {{ getPerformanceLevel() }}
+            </div>
+            <div class="text-xs text-gray-500">level</div>
+          </div>
+        </div>
       </div>
 
-      <!-- Single Question Display -->
-      <div *ngIf="!quizCompleted && quiz.length > 0" class="question-display">
-        <div class="question-card enhanced-question-card compact redesigned">
-          <!-- Question Content -->
-          <div class="question-content">
-            <div class="question-text">{{ getCurrentQuestion().question }}</div>
+      <!-- Quiz Content with Enhanced Card -->
+      <div class="bg-white/60 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/20">
+        <!-- Quiz Header (Progress) -->
+        <div class="quiz-header">
+          <div class="quiz-info">
+            <span class="question-counter">Question {{ currentQuestionIndex + 1 }} of {{ totalQuestions }}</span>
+            <span class="progress-info">{{ getAnsweredCount() }}/{{ totalQuestions }} answered</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getProgressPercentage()"></div>
+          </div>
+        </div>
+
+        <!-- Quiz Results -->
+        <div *ngIf="quizCompleted" class="quiz-results">
+          <div class="results-content">
+            <div class="score-icon">🎯</div>
+            <h3 class="score-message">{{ getScoreMessage() }}</h3>
+            <p class="score-text">You scored {{ score }} out of {{ totalQuestions }}</p>
+            <div class="score-percentage">{{ getScorePercentage() }}%</div>
+          </div>
+          
+          <!-- Review Toggle -->
+          <div class="review-section">
+            <button class="review-toggle-btn" (click)="toggleReview()">
+              <span class="pi" [ngClass]="showReview ? 'pi-eye-slash' : 'pi-eye'" style="font-size:1rem;"></span>
+              <span>{{ showReview ? 'Hide Review' : 'Show Review' }}</span>
+            </button>
             
-            <div class="options-list enhanced-options-list compact redesigned">
-              <div *ngFor="let option of getParsedOptions(getCurrentQuestion()); let optionIndex = index" 
-                   class="option-item enhanced-option-item compact redesigned"
-                   [ngClass]="isAnswerSelected(currentQuestionIndex, option) ? 'selected' : ''"
-                   (click)="selectAnswer(currentQuestionIndex, option)">
-                <div class="option-radio redesigned">
-                  <div class="radio-circle redesigned" [ngClass]="isAnswerSelected(currentQuestionIndex, option) ? 'checked' : ''"></div>
-                </div>
-                <div class="option-content">
-                  <div class="option-label">{{ getOptionLabel(optionIndex) }}</div>
-                  <div class="option-text">{{ option }}</div>
-                </div>
-                <div class="option-check" *ngIf="isAnswerSelected(currentQuestionIndex, option)">
-                  <span class="pi pi-check"></span>
-                </div>
+            <!-- Review Answers -->
+            <div *ngIf="showReview" class="review-answers">
+              <h4 class="review-title">Review Your Answers:</h4>
+              <div *ngFor="let question of quiz; let i = index" class="review-item" 
+                   [ngClass]="isCorrectAnswer(question, userAnswers[i]) ? 'correct' : 'incorrect'">
+                <p class="review-question">{{ i + 1 }}. {{ question.question }}</p>
+                <p class="review-answer">Your answer: <span class="user-answer">{{ userAnswers[i] || 'Not answered' }}</span></p>
+                <p class="review-answer">Correct answer: <span class="correct-answer">{{ question.answer }}</span></p>
               </div>
             </div>
           </div>
           
-          <!-- Navigation and Submit Section -->
-          <div class="question-navigation-section">
-            <!-- Navigation Controls -->
-            <div class="question-navigation-controls">
-              <button class="nav-btn prev-btn flex items-center gap-2" 
-                      (click)="goToPreviousQuestion()" 
-                      [disabled]="currentQuestionIndex === 0">
-                <span class="pi pi-chevron-left"></span>
-                <span>Previous</span>
-              </button>
+          <button class="reset-btn flex items-center gap-2" (click)="resetQuiz()">
+            <span class="pi pi-refresh"></span>
+            <span>Take Quiz Again</span>
+          </button>
+        </div>
+
+        <!-- Single Question Display -->
+        <div *ngIf="!quizCompleted && quiz.length > 0" class="question-display">
+          <div class="question-card enhanced-question-card compact redesigned">
+            <!-- Question Content -->
+            <div class="question-content">
+              <div class="question-text">{{ getCurrentQuestion().question }}</div>
               
-              <!-- Question Number Display -->
-              <div class="top-navigation-controls">
-                <div class="question-indicators">
-                  <div *ngFor="let question of quiz; let i = index" 
-                       class="question-indicator"
-                       [ngClass]="{
-                         'current': i === currentQuestionIndex,
-                         'answered': isQuestionAnswered(i),
-                         'unanswered': !isQuestionAnswered(i)
-                       }"
-                       (click)="goToQuestion(i)">
-                    {{ i + 1 }}
+              <div class="options-list enhanced-options-list compact redesigned">
+                <div *ngFor="let option of getParsedOptions(getCurrentQuestion()); let optionIndex = index" 
+                     class="option-item enhanced-option-item compact redesigned"
+                     [ngClass]="isAnswerSelected(currentQuestionIndex, option) ? 'selected' : ''"
+                     (click)="selectAnswer(currentQuestionIndex, option)">
+                  <div class="option-radio redesigned">
+                    <div class="radio-circle redesigned" [ngClass]="isAnswerSelected(currentQuestionIndex, option) ? 'checked' : ''"></div>
+                  </div>
+                  <div class="option-content">
+                    <div class="option-label">{{ getOptionLabel(optionIndex) }}</div>
+                    <div class="option-text">{{ option }}</div>
+                  </div>
+                  <div class="option-check" *ngIf="isAnswerSelected(currentQuestionIndex, option)">
+                    <span class="pi pi-check"></span>
                   </div>
                 </div>
               </div>
-              
-              <button class="nav-btn next-btn flex items-center gap-2" 
-                      (click)="goToNextQuestion()" 
-                      [disabled]="currentQuestionIndex === totalQuestions - 1">
-                <span>Next</span>
-                <span class="pi pi-chevron-right"></span>
-              </button>
             </div>
+            
+            <!-- Navigation and Submit Section -->
+            <div class="question-navigation-section">
+              <!-- Navigation Controls -->
+              <div class="question-navigation-controls">
+                <button class="nav-btn prev-btn flex items-center gap-2" 
+                        (click)="goToPreviousQuestion()" 
+                        [disabled]="currentQuestionIndex === 0">
+                  <span class="pi pi-chevron-left"></span>
+                  <span>Previous</span>
+                </button>
+                
+                <!-- Question Number Display -->
+                <div class="top-navigation-controls">
+                  <div class="question-indicators">
+                    <div *ngFor="let question of quiz; let i = index" 
+                         class="question-indicator"
+                         [ngClass]="{
+                           'current': i === currentQuestionIndex,
+                           'answered': isQuestionAnswered(i),
+                           'unanswered': !isQuestionAnswered(i)
+                         }"
+                         (click)="goToQuestion(i)">
+                      {{ i + 1 }}
+                    </div>
+                  </div>
+                </div>
+                
+                <button class="nav-btn next-btn flex items-center gap-2" 
+                        (click)="goToNextQuestion()" 
+                        [disabled]="currentQuestionIndex === totalQuestions - 1">
+                  <span>Next</span>
+                  <span class="pi pi-chevron-right"></span>
+                </button>
+              </div>
 
-            <!-- Submit Section -->
-            <div class="submit-section redesigned flex justify-content-center">
-              <button class="submit-btn redesigned flex items-center gap-2" 
-                      (click)="submitQuiz()" 
-                      *ngIf="currentQuestionIndex === totalQuestions - 1"
-                      [disabled]="!areAllQuestionsAnswered()">
-                <span class="pi pi-check"></span>
-                <span>Submit Quiz</span>
-              </button>
+              <!-- Submit Section -->
+              <div class="submit-section redesigned flex justify-content-center">
+                <button class="submit-btn redesigned flex items-center gap-2" 
+                        (click)="submitQuiz()" 
+                        *ngIf="currentQuestionIndex === totalQuestions - 1"
+                        [disabled]="!areAllQuestionsAnswered()">
+                  <span class="pi pi-check"></span>
+                  <span>Submit Quiz</span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- No Questions Available -->
-      <div *ngIf="quiz.length === 0" class="no-questions">
-        <div class="no-questions-icon">📝</div>
-        <p class="no-questions-text">No quiz questions available for this topic.</p>
+        <!-- No Questions Available -->
+        <div *ngIf="quiz.length === 0" class="no-questions">
+          <div class="no-questions-icon">📝</div>
+          <p class="no-questions-text">No quiz questions available for this topic.</p>
+        </div>
       </div>
     </div>
   </div>

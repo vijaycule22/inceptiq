@@ -139,8 +139,27 @@ export class QuizPanelComponent {
   }
 
   getProgressPercentage(): number {
-    return this.totalQuestions > 0
-      ? Math.round((this.getAnsweredCount() / this.totalQuestions) * 100)
-      : 0;
+    return (this.getAnsweredCount() / this.totalQuestions) * 100;
+  }
+
+  // Header method
+  getPerformanceLevel(): string {
+    if (this.quizCompleted) {
+      const percentage = this.getScorePercentage();
+      if (percentage >= 90) return 'Expert';
+      if (percentage >= 80) return 'Advanced';
+      if (percentage >= 70) return 'Intermediate';
+      if (percentage >= 60) return 'Beginner';
+      return 'Novice';
+    }
+
+    // If quiz not completed, base on answered questions
+    const answeredPercentage =
+      (this.getAnsweredCount() / this.totalQuestions) * 100;
+    if (answeredPercentage >= 80) return 'Active';
+    if (answeredPercentage >= 60) return 'Engaged';
+    if (answeredPercentage >= 40) return 'Progressing';
+    if (answeredPercentage >= 20) return 'Starting';
+    return 'New';
   }
 }

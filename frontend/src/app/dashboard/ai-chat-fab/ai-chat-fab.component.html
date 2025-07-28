@@ -17,8 +17,8 @@
   </div>
 </button>
 
-<!-- Chat Interface -->
-<div *ngIf="isOpen" 
+<!-- Floating Chat Interface -->
+<div *ngIf="isOpen && !isModalOpen" 
      class="fixed bottom-24 right-8 w-96 h-[600px] bg-white rounded-2xl shadow-2xl border border-gray-200 z-50 flex flex-col overflow-hidden">
   
   <!-- Header -->
@@ -33,10 +33,18 @@
           <p class="text-blue-100 text-sm">Ready to help you learn!</p>
         </div>
       </div>
-      <button (click)="closeChat()" 
-              class="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors">
-        <span class="pi pi-times text-sm"></span>
-      </button>
+      <div class="flex items-center gap-2">
+        <button (click)="openModal()" 
+                class="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors"
+                pTooltip="Expand to Full Screen"
+                tooltipPosition="bottom">
+          <span class="pi pi-external-link text-sm"></span>
+        </button>
+        <button (click)="closeChat()" 
+                class="w-8 h-8 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors">
+          <span class="pi pi-times text-sm"></span>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -142,7 +150,7 @@
           (keypress)="onKeyPress($event)"
           type="text" 
           placeholder="Ask me anything about your studies..."
-          class="w-full px-4 py-3 pr-12 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 text-sm"
+          class="w-full px-4 py-3 pr-12 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-gray-900 shadow-sm transition-all duration-300 placeholder:text-gray-500 text-sm"
           [disabled]="isLoading">
         <button *ngIf="newMessage.trim()"
                 (click)="sendMessage()"
@@ -173,6 +181,185 @@
               class="px-3 py-1 bg-purple-100 hover:bg-purple-200 text-purple-700 text-xs rounded-full transition-colors">
         Practice Question
       </button>
+    </div>
+  </div>
+</div>
+
+<!-- Full Screen Modal -->
+<div *ngIf="isModalOpen" 
+     class="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+  
+  <div class="bg-white rounded-3xl shadow-2xl w-full max-w-4xl h-[90vh] flex flex-col overflow-hidden">
+    
+    <!-- Modal Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-6 rounded-t-3xl">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
+            <span class="pi pi-robot text-2xl"></span>
+          </div>
+          <div>
+            <h2 class="text-2xl font-bold">AI Study Assistant</h2>
+            <p class="text-blue-100">Your personal learning companion</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <button (click)="minimizeModal()" 
+                  class="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center transition-colors"
+                  pTooltip="Minimize"
+                  tooltipPosition="bottom">
+            <span class="pi pi-minus text-lg"></span>
+          </button>
+          <button (click)="closeModal()" 
+                  class="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-xl flex items-center justify-center transition-colors">
+            <span class="pi pi-times text-lg"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Content -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      
+      <!-- Enhanced Messages Area -->
+      <div class="flex-1 overflow-hidden">
+        <p-scrollPanel styleClass="h-full">
+          <div class="p-6 space-y-6">
+            
+            <!-- Welcome Message -->
+            <div *ngIf="messages.length === 1" class="text-center py-8">
+              <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center">
+                <span class="pi pi-lightbulb text-4xl text-white"></span>
+              </div>
+              <h3 class="text-2xl font-bold text-gray-900 mb-4">Your AI Study Assistant</h3>
+              <p class="text-gray-600 text-lg">I'm here to help you learn better! Ask me anything about your studies.</p>
+            </div>
+
+            <!-- Enhanced Study Suggestions -->
+            <div *ngIf="suggestions.length > 0 && messages.length <= 2" class="space-y-4">
+              <h4 class="text-lg font-semibold text-gray-900">Quick Actions:</h4>
+              <div class="grid grid-cols-2 gap-4">
+                <button *ngFor="let suggestion of suggestions"
+                        (click)="selectSuggestion(suggestion)"
+                        class="p-6 bg-gray-50 hover:bg-blue-50 border-2 border-gray-200 hover:border-blue-300 rounded-2xl text-left transition-all duration-300 group hover:shadow-lg">
+                  <div class="flex items-center gap-3 mb-3">
+                    <span class="pi text-2xl" 
+                          [ngClass]="{
+                            'pi-lightbulb': suggestion.type === 'flashcard',
+                            'pi-question-circle': suggestion.type === 'quiz',
+                            'pi-file-text': suggestion.type === 'summary',
+                            'pi-star': suggestion.type === 'review',
+                            'text-blue-600': suggestion.type === 'flashcard',
+                            'text-purple-600': suggestion.type === 'quiz',
+                            'text-green-600': suggestion.type === 'summary',
+                            'text-yellow-600': suggestion.type === 'review'
+                          }">
+                    </span>
+                    <span class="font-semibold text-lg text-gray-900">{{ suggestion.title }}</span>
+                  </div>
+                  <p class="text-gray-600">{{ suggestion.description }}</p>
+                </button>
+              </div>
+            </div>
+
+            <!-- Enhanced Messages -->
+            <div *ngFor="let message of messages" 
+                 [ngClass]="getModalMessageClass(message)"
+                 class="animate-fade-in">
+              
+              <!-- User Avatar -->
+              <div *ngIf="message.sender === 'user'" 
+                   class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="pi pi-user text-white text-lg"></span>
+              </div>
+              
+              <!-- AI Avatar -->
+              <div *ngIf="message.sender === 'ai'" 
+                   class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="pi pi-robot text-white text-lg"></span>
+              </div>
+              
+              <!-- Message Content -->
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-3 mb-2">
+                  <span class="font-semibold text-base">
+                    {{ message.sender === 'user' ? 'You' : 'AI Assistant' }}
+                  </span>
+                  <span class="text-sm opacity-60">{{ getTimeString(message.timestamp) }}</span>
+                </div>
+                <div class="text-base leading-relaxed" 
+                     [innerHTML]="formatMessage(message.content)">
+                </div>
+              </div>
+            </div>
+
+            <!-- Enhanced Loading Indicator -->
+            <div *ngIf="isLoading" 
+                 class="flex gap-4 p-6 rounded-2xl bg-gray-100 text-gray-800 mr-12 animate-pulse">
+              <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="pi pi-robot text-white text-lg"></span>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center gap-3 mb-2">
+                  <span class="font-semibold text-base">AI Assistant</span>
+                </div>
+                <div class="flex items-center gap-2">
+                  <div class="w-3 h-3 bg-gray-400 rounded-full animate-bounce"></div>
+                  <div class="w-3 h-3 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.1s"></div>
+                  <div class="w-3 h-3 bg-gray-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </p-scrollPanel>
+      </div>
+
+      <!-- Enhanced Input Area -->
+      <div class="p-6 border-t border-gray-200 bg-gray-50">
+        <div class="flex gap-4">
+          <div class="flex-1 relative">
+            <input 
+              [(ngModel)]="newMessage"
+              (keypress)="onKeyPress($event)"
+              type="text" 
+              placeholder="Ask me anything about your studies..."
+              class="w-full px-6 py-4 pr-16 rounded-2xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-gray-900 shadow-sm transition-all duration-300 placeholder:text-gray-500 text-base"
+              [disabled]="isLoading">
+            <button *ngIf="newMessage.trim()"
+                    (click)="sendMessage()"
+                    class="absolute right-3 top-1/2 transform -translate-y-1/2 w-10 h-10 bg-blue-500 hover:bg-blue-600 text-white rounded-xl flex items-center justify-center transition-colors"
+                    [disabled]="isLoading">
+              <span class="pi pi-send text-base"></span>
+            </button>
+          </div>
+          <button (click)="clearChat()"
+                  class="px-4 py-4 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-xl transition-colors"
+                  pTooltip="Clear Chat"
+                  tooltipPosition="top">
+            <span class="pi pi-trash text-base"></span>
+          </button>
+        </div>
+        
+        <!-- Enhanced Quick Actions -->
+        <div class="flex gap-3 mt-4">
+          <button (click)="sendMessage('Can you explain the main concepts?')"
+                  class="px-4 py-2 bg-blue-100 hover:bg-blue-200 text-blue-700 text-sm rounded-xl transition-colors font-medium">
+            Explain Concepts
+          </button>
+          <button (click)="sendMessage('Give me study tips for this topic')"
+                  class="px-4 py-2 bg-green-100 hover:bg-green-200 text-green-700 text-sm rounded-xl transition-colors font-medium">
+            Study Tips
+          </button>
+          <button (click)="sendMessage('Create a practice question')"
+                  class="px-4 py-2 bg-purple-100 hover:bg-purple-200 text-purple-700 text-sm rounded-xl transition-colors font-medium">
+            Practice Question
+          </button>
+          <button (click)="sendMessage('Help me create a study plan')"
+                  class="px-4 py-2 bg-orange-100 hover:bg-orange-200 text-orange-700 text-sm rounded-xl transition-colors font-medium">
+            Study Plan
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

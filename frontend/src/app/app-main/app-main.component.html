@@ -322,28 +322,19 @@
           
           <!-- Summary Panel -->
           <div *ngIf="selectedPanel === 'summary'" class="space-y-6">
-            <div class="mb-6">
-              <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ selectedTopic }}</h1>
-              <p class="text-gray-600">Summary and key points</p>
-            </div>
+            
             <app-summary-card [summary]="getTopicSummary(selectedTopic)"></app-summary-card>
           </div>
 
           <!-- Flashcards Panel -->
           <div *ngIf="selectedPanel === 'flashcards'" class="space-y-6">
-            <div class="mb-6">
-              <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ selectedTopic }}</h1>
-              <p class="text-gray-600">Interactive flashcards</p>
-            </div>
+           
             <app-flashcards-carousel [flashcards]="getTopicFlashcards(selectedTopic)"></app-flashcards-carousel>
             </div>
             
           <!-- Quiz Panel -->
           <div *ngIf="selectedPanel === 'quiz'" class="space-y-6">
-            <div class="mb-6">
-              <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ selectedTopic }}</h1>
-              <p class="text-gray-600">Test your knowledge</p>
-            </div>
+            
             <app-quiz-panel [quiz]="getTopicQuiz(selectedTopic)"></app-quiz-panel>
           </div>
 
