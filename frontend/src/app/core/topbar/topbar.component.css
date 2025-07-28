@@ -1,0 +1,461 @@
+/* Enhanced Profile Dropdown Menu Styles - Landing Page Design */
+.enhanced-profile-dropdown-menu {
+  min-width: 200px !important;
+  border: none !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(16px) !important;
+  padding: 8px 0 !important;
+  margin-top: 8px !important;
+  font-size: 14px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+.enhanced-profile-dropdown-menu .p-menu-list {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.enhanced-profile-dropdown-menu .p-menuitem {
+  margin: 0 !important;
+}
+
+.enhanced-profile-dropdown-menu .p-menuitem-link {
+  padding: 12px 16px !important;
+  border-radius: 8px !important;
+  margin: 2px 8px !important;
+  transition: all 0.3s ease !important;
+  color: #374151 !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  line-height: 1.4 !important;
+}
+
+.enhanced-profile-dropdown-menu .p-menuitem-link::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.08), transparent) !important;
+  transition: left 0.3s ease !important;
+}
+
+.enhanced-profile-dropdown-menu .p-menuitem-link:hover::before {
+  left: 100% !important;
+}
+
+.enhanced-profile-dropdown-menu .p-menuitem-link:hover {
+  background: linear-gradient(135deg, rgba(248, 250, 252, 0.8), rgba(241, 245, 249, 0.8)) !important;
+  color: #1e293b !important;
+  transform: translateX(2px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+.enhanced-profile-dropdown-menu .p-menuitem-link .p-menuitem-icon {
+  color: #64748b !important;
+  margin-right: 12px !important;
+  font-size: 16px !important;
+  transition: all 0.3s ease !important;
+  width: 16px !important;
+  text-align: center !important;
+  flex-shrink: 0 !important;
+}
+
+.enhanced-profile-dropdown-menu .p-menuitem-link:hover .p-menuitem-icon {
+  color: #3b82f6 !important;
+  transform: scale(1.1) !important;
+}
+
+.enhanced-profile-dropdown-menu .p-menuitem-separator {
+  margin: 6px 8px !important;
+  border-top: 1px solid rgba(241, 245, 249, 0.6) !important;
+  opacity: 0.4 !important;
+}
+
+/* Special styling for different menu items with enhanced colors */
+.enhanced-profile-dropdown-menu .p-menuitem:nth-child(1) .p-menuitem-link .p-menuitem-icon {
+  color: #3b82f6 !important;
+}
+
+.enhanced-profile-dropdown-menu .p-menuitem:nth-child(2) .p-menuitem-link .p-menuitem-icon {
+  color: #8b5cf6 !important;
+}
+
+.enhanced-profile-dropdown-menu .p-menuitem:nth-child(3) .p-menuitem-link .p-menuitem-icon {
+  color: #10b981 !important;
+}
+
+.enhanced-profile-dropdown-menu .p-menuitem:nth-child(5) .p-menuitem-link .p-menuitem-icon {
+  color: #f59e0b !important;
+}
+
+.enhanced-profile-dropdown-menu .p-menuitem:nth-child(6) .p-menuitem-link .p-menuitem-icon {
+  color: #06b6d4 !important;
+}
+
+/* Enhanced Logout item styling with distinct red color */
+.enhanced-profile-dropdown-menu .p-menuitem:last-child .p-menuitem-link {
+  color: #dc2626 !important;
+  font-weight: 600 !important;
+  background: linear-gradient(135deg, rgba(254, 242, 242, 0.8), rgba(254, 226, 226, 0.8)) !important;
+  border: 1px solid rgba(254, 202, 202, 0.3) !important;
+  margin-top: 4px !important;
+}
+
+.enhanced-profile-dropdown-menu .p-menuitem:last-child .p-menuitem-link:hover {
+  background: linear-gradient(135deg, rgba(254, 202, 202, 0.9), rgba(252, 165, 165, 0.9)) !important;
+  color: #b91c1c !important;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15) !important;
+  border-color: rgba(248, 113, 113, 0.4) !important;
+  transform: translateX(2px) !important;
+}
+
+.enhanced-profile-dropdown-menu .p-menuitem:last-child .p-menuitem-link .p-menuitem-icon {
+  color: #dc2626 !important;
+}
+
+.enhanced-profile-dropdown-menu .p-menuitem:last-child .p-menuitem-link:hover .p-menuitem-icon {
+  color: #b91c1c !important;
+  transform: scale(1.1) !important;
+}
+
+/* Enhanced animation for menu appearance */
+.enhanced-profile-dropdown-menu {
+  animation: enhancedSlideInDown 0.25s ease-out !important;
+}
+
+@keyframes enhancedSlideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Global styles for PrimeNG menu - these will apply regardless of encapsulation */
+:host ::ng-deep .enhanced-profile-dropdown-menu {
+  min-width: 200px !important;
+  border: none !important;
+  border-radius: 16px !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(16px) !important;
+  padding: 8px 0 !important;
+  margin-top: 8px !important;
+  font-size: 14px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+
+:host ::ng-deep .enhanced-profile-dropdown-menu .p-menu-list {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+:host ::ng-deep .enhanced-profile-dropdown-menu .p-menuitem {
+  margin: 0 !important;
+}
+
+:host ::ng-deep .enhanced-profile-dropdown-menu .p-menuitem-link {
+  padding: 12px 16px !important;
+  border-radius: 8px !important;
+  margin: 2px 8px !important;
+  transition: all 0.3s ease !important;
+  color: #374151 !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  line-height: 1.4 !important;
+}
+
+:host ::ng-deep .enhanced-profile-dropdown-menu .p-menuitem-link::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.08), transparent) !important;
+  transition: left 0.3s ease !important;
+}
+
+:host ::ng-deep .enhanced-profile-dropdown-menu .p-menuitem-link:hover::before {
+  left: 100% !important;
+}
+
+:host ::ng-deep .enhanced-profile-dropdown-menu .p-menuitem-link:hover {
+  background: linear-gradient(135deg, rgba(248, 250, 252, 0.8), rgba(241, 245, 249, 0.8)) !important;
+  color: #1e293b !important;
+  transform: translateX(2px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+}
+
+:host ::ng-deep .enhanced-profile-dropdown-menu .p-menuitem-link .p-menuitem-icon {
+  color: #64748b !important;
+  margin-right: 12px !important;
+  font-size: 16px !important;
+  transition: all 0.3s ease !important;
+  width: 16px !important;
+  text-align: center !important;
+  flex-shrink: 0 !important;
+}
+
+:host ::ng-deep .enhanced-profile-dropdown-menu .p-menuitem-link:hover .p-menuitem-icon {
+  color: #3b82f6 !important;
+  transform: scale(1.1) !important;
+}
+
+:host ::ng-deep .enhanced-profile-dropdown-menu .p-menuitem-separator {
+  margin: 6px 8px !important;
+  border-top: 1px solid rgba(241, 245, 249, 0.6) !important;
+  opacity: 0.4 !important;
+}
+
+/* Special styling for different menu items with enhanced colors */
+:host ::ng-deep .enhanced-profile-dropdown-menu .p-menuitem:nth-child(1) .p-menuitem-link .p-menuitem-icon {
+  color: #3b82f6 !important;
+}
+
+:host ::ng-deep .enhanced-profile-dropdown-menu .p-menuitem:nth-child(2) .p-menuitem-link .p-menuitem-icon {
+  color: #8b5cf6 !important;
+}
+
+:host ::ng-deep .enhanced-profile-dropdown-menu .p-menuitem:nth-child(3) .p-menuitem-link .p-menuitem-icon {
+  color: #10b981 !important;
+}
+
+:host ::ng-deep .enhanced-profile-dropdown-menu .p-menuitem:nth-child(5) .p-menuitem-link .p-menuitem-icon {
+  color: #f59e0b !important;
+}
+
+:host ::ng-deep .enhanced-profile-dropdown-menu .p-menuitem:nth-child(6) .p-menuitem-link .p-menuitem-icon {
+  color: #06b6d4 !important;
+}
+
+/* Enhanced Logout item styling with distinct red color */
+:host ::ng-deep .enhanced-profile-dropdown-menu .p-menuitem:last-child .p-menuitem-link {
+  color: #dc2626 !important;
+  font-weight: 600 !important;
+  background: linear-gradient(135deg, rgba(254, 242, 242, 0.8), rgba(254, 226, 226, 0.8)) !important;
+  border: 1px solid rgba(254, 202, 202, 0.3) !important;
+  margin-top: 4px !important;
+}
+
+:host ::ng-deep .enhanced-profile-dropdown-menu .p-menuitem:last-child .p-menuitem-link:hover {
+  background: linear-gradient(135deg, rgba(254, 202, 202, 0.9), rgba(252, 165, 165, 0.9)) !important;
+  color: #b91c1c !important;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.15) !important;
+  border-color: rgba(248, 113, 113, 0.4) !important;
+  transform: translateX(2px) !important;
+}
+
+:host ::ng-deep .enhanced-profile-dropdown-menu .p-menuitem:last-child .p-menuitem-link .p-menuitem-icon {
+  color: #dc2626 !important;
+}
+
+:host ::ng-deep .enhanced-profile-dropdown-menu .p-menuitem:last-child .p-menuitem-link:hover .p-menuitem-icon {
+  color: #b91c1c !important;
+  transform: scale(1.1) !important;
+}
+
+/* Enhanced animation for menu appearance */
+:host ::ng-deep .enhanced-profile-dropdown-menu {
+  animation: enhancedSlideInDown 0.25s ease-out !important;
+}
+
+@keyframes enhancedSlideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Enhanced search bar focus effects */
+.search-container {
+  position: relative;
+}
+
+.search-container::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, #3b82f6, #06b6d4, #3b82f6);
+  border-radius: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.search-container:focus-within::before {
+  opacity: 0.3;
+}
+
+/* Button hover animations */
+.action-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.action-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(59, 130, 246, 0.1);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.action-btn:hover::before {
+  width: 100%;
+  height: 100%;
+}
+
+/* Profile card enhancements */
+.profile-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.05), transparent);
+  transition: left 0.6s ease;
+}
+
+.profile-card:hover::after {
+  left: 100%;
+}
+
+/* Topic badge animation */
+.topic-badge {
+  position: relative;
+  overflow: hidden;
+}
+
+.topic-badge::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #3b82f6, #06b6d4, #3b82f6);
+  border-radius: 1rem;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.topic-badge:hover::before {
+  opacity: 0.3;
+}
+
+/* Notification badge pulse */
+.notification-badge {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* Keyboard shortcut styling */
+.kbd {
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+/* Smooth transitions for all interactive elements */
+* {
+  transition: all 0.2s ease;
+}
+
+/* Enhanced focus states */
+input:focus,
+button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Responsive enhancements */
+@media (max-width: 1024px) {
+  .topbar {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .search-container {
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .search-container {
+    max-width: 100%;
+    order: 2;
+  }
+  
+  .profile-section {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* Glass morphism effect */
+.glass-effect {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Gradient text effect */
+.gradient-text {
+  background: linear-gradient(45deg, #3b82f6, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}

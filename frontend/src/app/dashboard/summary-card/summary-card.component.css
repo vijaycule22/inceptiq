@@ -1,0 +1,162 @@
+/* Card shadow and background */
+:host {
+  display: block;
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 6px 24px 0 rgba(27,143,240,0.08), 0 1.5px 4px 0 rgba(27,143,240,0.04);
+}
+
+.summary-container {
+  line-height: 1.7;
+  color: #374151;
+  font-size: 1.05rem;
+  word-wrap: break-word;
+  background: white;
+  border-radius: 0 0 1rem 1rem;
+}
+
+/* Markdown heading styles */
+.summary-container h1,
+.summary-container h2,
+.summary-container h3,
+.summary-container h4,
+.summary-container h5,
+.summary-container h6 {
+  color: #1e40af;
+  font-weight: 700;
+  margin-top: 2.5rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.01em;
+}
+
+.summary-container h1 {
+  font-size: 1.7rem;
+  border-bottom: 2px solid #e0e7ef;
+  padding-bottom: 0.5rem;
+  margin-top: 2rem;
+}
+
+.summary-container h2 {
+  font-size: 1.3rem;
+  border-bottom: 1px solid #e0e7ef;
+  padding-bottom: 0.25rem;
+  margin-top: 2.5rem;
+}
+
+.summary-container h3 {
+  font-size: 1.1rem;
+  margin-top: 2rem;
+}
+
+/* Paragraph and text styles */
+.summary-container p {
+  margin-bottom: 1.1rem;
+  line-height: 1.7;
+}
+
+.summary-container strong,
+.summary-container b {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.summary-container em,
+.summary-container i {
+  font-style: italic;
+}
+
+/* List styles */
+.summary-container ul,
+.summary-container ol {
+  margin-left: 1.5rem;
+  margin-bottom: 1.1rem;
+}
+
+.summary-container li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.summary-container ul li {
+  list-style-type: disc;
+  padding-left: 0.25rem;
+}
+
+.summary-container ol li {
+  list-style-type: decimal;
+  padding-left: 0.25rem;
+}
+
+/* Code and blockquote styles */
+.summary-container code {
+  background: #f3f4f6;
+  padding: 0.125rem 0.4rem;
+  border-radius: 0.3rem;
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  font-size: 0.93rem;
+  color: #1e40af;
+}
+
+.summary-container pre {
+  background: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.7rem;
+  overflow-x: auto;
+  margin: 1.2rem 0;
+  border: 1px solid #e0e7ef;
+}
+
+.summary-container pre code {
+  background: none;
+  padding: 0;
+}
+
+.summary-container blockquote {
+  border-left: 4px solid #1e40af;
+  padding-left: 1.1rem;
+  margin: 1.2rem 0;
+  font-style: italic;
+  color: #2563eb;
+  background: #f0f9ff;
+  border-radius: 0.5rem;
+}
+
+/* Link styles */
+.summary-container a {
+  color: #0ea5e9;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+.summary-container a:hover {
+  color: #1e40af;
+}
+
+/* Table styles */
+.summary-container table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1.2rem 0;
+  background: #f8fafc;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.summary-container th,
+.summary-container td {
+  border: 1px solid #e0e7ef;
+  padding: 0.6rem;
+  text-align: left;
+}
+
+.summary-container th {
+  background: #e0f2fe;
+  font-weight: 700;
+}
+
+/* Horizontal rule */
+.summary-container hr {
+  border: none;
+  border-top: 1px solid #e0e7ef;
+  margin: 1.5rem 0;
+}

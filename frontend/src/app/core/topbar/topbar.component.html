@@ -1,0 +1,66 @@
+<div class="relative z-50 px-0 py-4 sticky top-0 bg-white/80 backdrop-blur-md border-b border-gray-100">
+  <div class="w-full flex items-center justify-between px-6">
+    <!-- Left: Logo -->
+    <div class="flex items-center">
+      <img src="/InceptIQ.svg" alt="InceptIQ Logo" class="w-36" />
+    </div>
+
+    <!-- Center: Search Bar -->
+    <div class="flex flex-1 items-center justify-center px-6">
+      <div class="w-full max-w-md">
+        <div class="relative group">
+          <div class="absolute inset-y-0 left-0 flex items-center pl-3">
+            <span class="pi pi-search text-gray-400 text-sm"></span>
+          </div>
+          <input 
+            type="text" 
+            placeholder="Search topics, summaries, flashcards..." 
+            class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/60 backdrop-blur-sm border border-gray-200 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-gray-900 shadow-sm transition-all duration-300 placeholder:text-gray-500 text-sm" 
+          />
+          <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+            <kbd class="px-2 py-1 text-xs font-semibold text-gray-500 bg-gray-100 border border-gray-200 rounded-md">⌘K</kbd>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: User Profile and Actions -->
+    <div class="flex items-center gap-4">
+      <!-- Progress Indicator -->
+      <app-progress-indicator></app-progress-indicator>
+      
+      <!-- Notifications -->
+      <button class="relative w-10 h-10 bg-white/60 backdrop-blur-sm border border-gray-200 hover:border-blue-500 rounded-xl flex items-center justify-center transition-all duration-300 hover:shadow-lg group">
+        <span class="pi pi-bell text-gray-600 text-sm"></span>
+        <span class="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-red-500 to-pink-500 text-white text-xs font-bold rounded-full flex items-center justify-center border-2 border-white shadow-sm">3</span>
+      </button>
+      
+      <!-- Enhanced Profile Dropdown -->
+      <div class="relative">
+        <button 
+          (click)="showProfileMenu($event, profileMenu)"
+          class="flex items-center gap-3 bg-white/60 backdrop-blur-sm px-4 py-2.5 rounded-xl border border-gray-200 hover:border-blue-500 shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer group">
+          <div class="w-8 h-8 bg-gradient-to-r from-blue-600 to-cyan-500 rounded-lg flex items-center justify-center shadow-sm">
+            <span class="text-white font-bold text-sm">{{ currentUser?.firstName?.charAt(0) || 'U' }}</span>
+          </div>
+          <div class="flex flex-col items-start justify-center">
+            <span class="font-semibold text-sm text-gray-900">{{ currentUser?.firstName || 'User' }}</span>
+            <span class="text-xs text-gray-500">{{ currentUser?.email || 'user@example.com' }}</span>
+          </div>
+          <div class="w-5 h-5 bg-gray-100 group-hover:bg-blue-50 rounded-md flex items-center justify-center transition-colors">
+            <span class="pi pi-chevron-down text-gray-500 text-xs"></span>
+          </div>
+        </button>
+        
+        <!-- Enhanced Profile Menu Dropdown -->
+        <p-menu 
+          #profileMenu 
+          [popup]="true" 
+          [model]="profileItems"
+          appendTo="body"
+          styleClass="enhanced-profile-dropdown-menu">
+        </p-menu>
+      </div>
+    </div>
+  </div>
+</div>

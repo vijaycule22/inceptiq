@@ -1,0 +1,58 @@
+/* Progress Indicator Styles */
+:host {
+  display: block;
+}
+
+/* Hover Effects */
+.progress-indicator:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Progress Bar Animation */
+.progress-bar {
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+/* Level Badge Animation */
+.level-badge {
+  transition: transform 0.2s ease;
+}
+
+.level-badge:hover {
+  transform: scale(1.1);
+}
+
+/* Points Counter Animation */
+.points-counter {
+  transition: color 0.3s ease;
+}
+
+.points-counter:hover {
+  color: #fbbf24;
+}
+
+/* Responsive Design */
+@media (max-width: 640px) {
+  .progress-indicator {
+    padding: 0.5rem;
+  }
+  
+  .progress-bar-container {
+    max-width: 24px;
+  }
+  
+  .level-info {
+    display: none;
+  }
+} 

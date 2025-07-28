@@ -1,0 +1,147 @@
+<div class="flex flex-col h-full bg-white/60 backdrop-blur-sm border-r border-gray-200 shadow-xl overflow-hidden w-64 mt-4 rounded-r-2xl">
+
+  <!-- Dashboard Link -->
+  <div class="px-4 py-3">
+    <button 
+            class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 group"
+            [ngClass]="isDashboardActive() ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg' : 'text-gray-700 hover:bg-white/80 hover:text-blue-600 hover:shadow-md'" 
+            (click)="onDashboard()">
+      <div class="w-5 h-5 rounded-lg flex items-center justify-center transition-colors"
+           [ngClass]="isDashboardActive() ? 'bg-white/20' : 'bg-blue-100 group-hover:bg-blue-200'">
+        <span class="pi pi-home text-sm transition-colors"
+              [ngClass]="isDashboardActive() ? 'text-white' : 'text-blue-600 group-hover:text-blue-700'"></span>
+      </div>
+      <span>Dashboard</span>
+    </button>
+  </div>
+
+  <!-- Leaderboard Link -->
+  <div class="px-4 py-2 border-b border-gray-200/50">
+    <button 
+            class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 group"
+            [ngClass]="isLeaderboardActive() ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg' : 'text-gray-700 hover:bg-white/80 hover:text-yellow-600 hover:shadow-md'" 
+            (click)="onLeaderboard()">
+      <div class="w-5 h-5 rounded-lg flex items-center justify-center transition-colors"
+           [ngClass]="isLeaderboardActive() ? 'bg-white/20' : 'bg-yellow-100 group-hover:bg-yellow-200'">
+        <span class="text-sm transition-colors"
+              [ngClass]="isLeaderboardActive() ? 'text-white' : 'text-yellow-600 group-hover:text-yellow-700'">🏆</span>
+      </div>
+      <span>Leaderboard</span>
+    </button>
+  </div>
+
+  <!-- Section Header - Only show when there are topics -->
+  <div class="px-6 pt-6 pb-3 mt-2" *ngIf="topics.length > 0">
+    <span class="text-xs font-bold uppercase tracking-widest text-gray-500">My Topics</span>
+  </div>
+
+  <!-- Topics List -->
+  <div class="flex-1 overflow-y-auto px-4 py-2 sidebar-scroll">
+    <p-accordion [multiple]="true" [activeIndex]="getActiveIndex()" class="bg-transparent border-none shadow-none">
+      <p-accordionTab *ngFor="let topic of topics; let i = index" 
+                      class="mb-3 rounded-xl overflow-hidden bg-white/80 backdrop-blur-sm border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all duration-300">
+        
+        <!-- Custom Header Template -->
+        <ng-template pTemplate="header">
+          <div class="flex items-center justify-between w-full px-4 py-3">
+            <!-- Left: Document Icon + Topic Name -->
+            <div class="flex items-center gap-3 flex-1 min-w-0">
+              <div class="w-6 h-6 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <span class="text-sm text-blue-600">📄</span>
+              </div>
+              <span class="text-sm font-medium text-gray-900 truncate">{{ topic.name }}</span>
+            </div>
+            
+            <!-- Right: Expand/Collapse Icon -->
+            <div class="flex items-center justify-center w-5 h-5 flex-shrink-0">
+              <span class="pi pi-chevron-down text-xs text-gray-500 transition-transform duration-300" 
+                    [ngClass]="{'rotate-180': isAccordionOpen(i)}"></span>
+            </div>
+          </div>
+        </ng-template>
+        
+        <!-- Content -->
+        <ul class="py-2">
+          <li class="mx-2 mb-2 rounded-lg overflow-hidden menu-item"
+              [ngClass]="{'active-item': isActiveMenu('summary', topic.name)}">
+            <div class="flex items-center gap-3 px-4 py-3 ml-2 rounded-lg transition-all duration-300 cursor-pointer group"
+                 [ngClass]="isActiveMenu('summary', topic.name) ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-md' : 'hover:bg-white/80 hover:text-blue-600 hover:shadow-sm'"
+                 (click)="onSelect('summary', topic.name)">
+              <div class="w-6 h-6 rounded-lg flex items-center justify-center transition-colors"
+                   [ngClass]="isActiveMenu('summary', topic.name) ? 'bg-white/20' : 'bg-blue-100 group-hover:bg-blue-200'">
+                <span class="pi pi-file text-sm transition-colors"
+                      [ngClass]="isActiveMenu('summary', topic.name) ? 'text-white' : 'text-blue-600'"></span>
+              </div>
+              <span class="text-sm font-medium transition-colors"
+                    [ngClass]="isActiveMenu('summary', topic.name) ? 'text-white' : 'text-gray-700 group-hover:text-blue-600'">Summary</span>
+              <div class="ml-auto w-2 h-2 bg-white rounded-full transition-opacity"
+                   [ngClass]="isActiveMenu('summary', topic.name) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'"></div>
+            </div>
+          </li>
+          <li class="mx-2 mb-2 rounded-lg overflow-hidden menu-item"
+              [ngClass]="{'active-item': isActiveMenu('flashcards', topic.name)}">
+            <div class="flex items-center gap-3 px-4 py-3 ml-2 rounded-lg transition-all duration-300 cursor-pointer group"
+                 [ngClass]="isActiveMenu('flashcards', topic.name) ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-md' : 'hover:bg-white/80 hover:text-cyan-600 hover:shadow-sm'"
+                 (click)="onSelect('flashcards', topic.name)">
+              <div class="w-6 h-6 rounded-lg flex items-center justify-center transition-colors"
+                   [ngClass]="isActiveMenu('flashcards', topic.name) ? 'bg-white/20' : 'bg-cyan-100 group-hover:bg-cyan-200'">
+                <span class="pi pi-lightbulb text-sm transition-colors"
+                      [ngClass]="isActiveMenu('flashcards', topic.name) ? 'text-white' : 'text-cyan-600'"></span>
+              </div>
+              <span class="text-sm font-medium transition-colors"
+                    [ngClass]="isActiveMenu('flashcards', topic.name) ? 'text-white' : 'text-gray-700 group-hover:text-cyan-600'">Flashcards</span>
+              <div class="ml-auto w-2 h-2 bg-white rounded-full transition-opacity"
+                   [ngClass]="isActiveMenu('flashcards', topic.name) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'"></div>
+            </div>
+          </li>
+          <li class="mx-2 mb-2 rounded-lg overflow-hidden menu-item"
+              [ngClass]="{'active-item': isActiveMenu('quiz', topic.name)}">
+            <div class="flex items-center gap-3 px-4 py-3 ml-2 rounded-lg transition-all duration-300 cursor-pointer group"
+                 [ngClass]="isActiveMenu('quiz', topic.name) ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md' : 'hover:bg-white/80 hover:text-purple-600 hover:shadow-sm'"
+                 (click)="onSelect('quiz', topic.name)">
+              <div class="w-6 h-6 rounded-lg flex items-center justify-center transition-colors"
+                   [ngClass]="isActiveMenu('quiz', topic.name) ? 'bg-white/20' : 'bg-purple-100 group-hover:bg-purple-200'">
+                <span class="pi pi-question-circle text-sm transition-colors"
+                      [ngClass]="isActiveMenu('quiz', topic.name) ? 'text-white' : 'text-purple-600'"></span>
+              </div>
+              <span class="text-sm font-medium transition-colors"
+                    [ngClass]="isActiveMenu('quiz', topic.name) ? 'text-white' : 'text-gray-700 group-hover:text-purple-600'">Quizzes</span>
+              <div class="ml-auto w-2 h-2 bg-white rounded-full transition-opacity"
+                   [ngClass]="isActiveMenu('quiz', topic.name) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'"></div>
+            </div>
+          </li>
+        </ul>
+      </p-accordionTab>
+    </p-accordion>
+  </div>
+
+  <!-- Quick Actions Section -->
+  <div class="px-4 py-3 ">
+  
+    <!-- Upload Button -->
+    <button 
+            class="w-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white font-semibold py-3 px-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3 group upload-btn mb-3" 
+            (click)="onUploadNewTopic()">
+      <div class="w-5 h-5 bg-white/20 rounded-lg flex items-center justify-center group-hover:bg-white/30 transition-colors">
+        <span class="pi pi-upload text-sm"></span>
+      </div>
+      <span class="text-sm">Upload New Topic</span>
+    </button>
+  </div>
+
+  <!-- User Profile Section -->
+  <div class="px-4 py-3 border-t border-gray-200/50">
+ 
+   
+
+    <!-- Logout Button -->
+    <button 
+            class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-red-600 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100 hover:text-red-700 rounded-xl transition-all duration-300 group" 
+            (click)="onLogout()">
+      <div class="w-5 h-5 bg-red-100 rounded-lg flex items-center justify-center group-hover:bg-red-200 transition-colors">
+        <span class="pi pi-sign-out text-sm text-red-600 group-hover:text-red-700"></span>
+      </div>
+      <span>Logout</span>
+    </button>
+  </div>
+</div>

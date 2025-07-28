@@ -1,0 +1,34 @@
+<div class="flex items-center gap-3 bg-white rounded-lg px-4 py-2 shadow-sm border border-gray-200">
+  <!-- Level Badge -->
+  <div class="flex items-center gap-2">
+    <div 
+      class="w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold"
+      [style.background]="currentLevel?.color || '#6B7280'">
+      {{ currentLevel?.badge || '🌱' }}
+    </div>
+    <div class="text-sm">
+      <div class="font-semibold text-gray-900">Level {{ userStats?.level || 1 }}</div>
+      <div class="text-xs text-gray-500">{{ currentLevel?.name || 'Novice Learner' }}</div>
+    </div>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="flex-1 max-w-32">
+    <div class="w-full bg-gray-200 rounded-full h-2">
+      <div 
+        class="h-2 rounded-full transition-all duration-500"
+        [style.background]="currentLevel?.color || '#6B7280'"
+        [style.width.%]="getProgressPercentage()">
+      </div>
+    </div>
+    <div class="text-xs text-gray-500 mt-1">
+      {{ userStats?.currentLevelPoints || 0 }} / {{ userStats?.pointsToNextLevel || 0 }}
+    </div>
+  </div>
+
+  <!-- Points -->
+  <div class="text-right">
+    <div class="text-sm font-bold text-gray-900">{{ userStats?.totalPoints || 0 }}</div>
+    <div class="text-xs text-gray-500">points</div>
+  </div>
+</div> 

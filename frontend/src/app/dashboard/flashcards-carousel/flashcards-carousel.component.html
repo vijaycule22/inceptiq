@@ -1,0 +1,87 @@
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 relative overflow-hidden">
+  <!-- Floating Educational Elements -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <!-- Animated Background Elements -->
+    <div class="absolute top-20 left-10 w-16 h-16 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full opacity-20 animate-float-slow"></div>
+    <div class="absolute top-40 right-20 w-12 h-12 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full opacity-15 animate-float-medium"></div>
+    <div class="absolute top-60 left-1/4 w-8 h-8 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full opacity-25 animate-float-fast"></div>
+    
+    <!-- Educational Icons -->
+    <div class="absolute top-32 right-1/3 w-6 h-6 text-blue-500 opacity-30 animate-bounce-slow">
+      <span class="pi pi-book text-xl"></span>
+    </div>
+    <div class="absolute top-48 left-1/3 w-6 h-6 text-purple-500 opacity-25 animate-pulse-slow">
+      <span class="pi pi-lightbulb text-xl"></span>
+    </div>
+    <div class="absolute top-80 right-1/4 w-6 h-6 text-cyan-500 opacity-20 animate-spin-slow">
+      <span class="pi pi-chart-line text-xl"></span>
+    </div>
+    
+    <!-- Geometric Shapes -->
+    <div class="absolute top-24 left-1/2 w-4 h-4 bg-gradient-to-r from-yellow-400 to-orange-400 transform rotate-45 opacity-20 animate-float-medium"></div>
+    <div class="absolute top-72 right-16 w-3 h-3 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full opacity-15 animate-float-fast"></div>
+    <div class="absolute top-96 left-20 w-5 h-5 bg-gradient-to-r from-teal-400 to-cyan-400 transform rotate-12 opacity-25 animate-float-slow"></div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="relative z-10">
+
+
+    <!-- Flashcards Content with Enhanced Card -->
+    <div class="bg-white/60 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/20">
+      <div class="carousel-container">
+        <p-carousel 
+          [value]="flashcards" 
+          [numVisible]="1" 
+          [numScroll]="1"
+          [circular]="false"
+          [showNavigators]="false"
+          (onChange)="onCarouselChange($event)"
+          #carousel>
+          <ng-template pTemplate="item" let-card let-i="index">
+            <div class="flashcard-wrapper" (click)="flipCard(i); $event.stopPropagation()">
+              <div class="flashcard" [class.flipped]="isFlipped(i)">
+                <!-- Front of card (Question) -->
+                <div class="flashcard-front">
+                  <div class="card-content">
+                    <div class="question-icon text-3xl mb-2">❓</div>
+                    <div class="question-text font-semibold text-lg mb-2">{{ card.question }}</div>
+                    <div class="click-hint text-xs text-cyan-100/80">Click to reveal answer</div>
+                  </div>
+                </div>
+                
+                <!-- Back of card (Answer) -->
+                <div class="flashcard-back">
+                  <div class="card-content">
+                    <div class="answer-icon text-3xl mb-2">💡</div>
+                    <div class="answer-text font-semibold text-lg mb-2">{{ card.answer }}</div>
+                    <div class="click-hint text-xs text-cyan-100/80">Click to see question</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </p-carousel>
+
+        <!-- Manual Navigation Controls moved below cards -->
+        <div class="manual-navigation mt-4 flex justify-center items-center gap-4">
+          <button 
+            (click)="goToPrevious()" 
+            [disabled]="currentCardIndex === 0"
+            class="nav-btn flex items-center gap-2">
+            <span class="pi pi-chevron-left"></span>
+            <span>Previous</span>
+          </button>
+          <span class="nav-info font-medium text-[#1e40af]">Card {{ currentCardIndex + 1 }} of {{ flashcards.length }}</span>
+          <button 
+            (click)="goToNext()" 
+            [disabled]="currentCardIndex === flashcards.length - 1"
+            class="nav-btn flex items-center gap-2">
+            <span>Next</span>
+            <span class="pi pi-chevron-right"></span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

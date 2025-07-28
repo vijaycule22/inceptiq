@@ -1,0 +1,430 @@
+<div class="flex min-h-screen font-sans">
+  <!-- Topbar - Full width -->
+  <div class="fixed top-0 left-0 right-0 z-50">
+    <app-topbar [topic]="selectedTopic" [panel]="selectedPanel" />
+  </div>
+  
+  <!-- Sidebar - Below header -->
+  <div class="hidden md:block fixed top-16 left-0 w-64 h-[calc(100vh-5rem)] z-40" *ngIf="topics.length > 0">
+    <app-sidebar 
+      [selectedTopic]="selectedTopic" 
+      [selectedPanel]="selectedPanel" 
+      (selectPanel)="onSelectPanel($event)" 
+      (uploadNewTopic)="onUploadNewTopic()" />
+  </div>
+  
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col" [ngClass]="{'md:ml-64': topics.length > 0}">
+    <main class="flex-1 p-8 bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 transition-all pt-24 rounded-tl-3xl shadow-inner">
+      
+      <!-- Enhanced Dashboard with Integrated Progress -->
+      <div *ngIf="showDashboard" class="min-h-screen">
+        <div class="">
+          
+          <!-- Welcome Header -->
+          <div class="mb-8 text-left">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">
+              Welcome back, {{ currentUser?.firstName || 'Learner' }}! 👋
+                </h1>
+            <p class="text-gray-600">Track your progress and continue learning</p>
+          </div>
+
+          <!-- Key Stats Row -->
+          <div class="grid md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white shadow-lg">
+              <div class="text-center">
+                <div class="text-3xl mb-2">📚</div>
+                <div class="text-3xl font-bold">{{ topics.length }}</div>
+                <div class="text-sm text-blue-100">Topics</div>
+              </div>
+            </div>
+            
+            <div class="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white shadow-lg">
+              <div class="text-center">
+                <div class="text-3xl mb-2">⭐</div>
+                <div class="text-3xl font-bold">{{ userStats?.totalPoints || 0 }}</div>
+                <div class="text-sm text-green-100">Points</div>
+              </div>
+            </div>
+            
+            <div class="bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl p-6 text-white shadow-lg">
+              <div class="text-center">
+                <div class="text-3xl mb-2">🔥</div>
+                <div class="text-3xl font-bold">{{ userStats?.currentStreak || 0 }}</div>
+                <div class="text-sm text-orange-100">Day Streak</div>
+              </div>
+            </div>
+            
+            <div class="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white shadow-lg">
+              <div class="text-center">
+                <div class="text-3xl mb-2">🏆</div>
+                <div class="text-3xl font-bold">{{ getUnlockedAchievements().length }}</div>
+                <div class="text-sm text-purple-100">Achievements</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Main Content Grid -->
+          <div class="grid lg:grid-cols-3 gap-8">
+            
+            <!-- Left: Learning Topics -->
+            <div class="lg:col-span-2 space-y-6">
+              
+              <!-- Topics Section -->
+              <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+                <div class="flex items-center justify-between mb-6">
+                  <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                      <span class="text-white text-lg">📚</span>
+                    </div>
+                  <div>
+                    <h2 class="text-2xl font-bold text-gray-900">Your Learning Topics</h2>
+                      <p class="text-sm text-gray-600">Manage and organize your study materials</p>
+                    </div>
+                  </div>
+                  <button 
+                    (click)="onUploadNewTopic()"
+                    class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 py-2 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg flex items-center gap-2">
+                    <span>📤</span>
+                    <span>Upload New</span>
+                  </button>
+                </div>
+                
+                <div *ngIf="hasTopics; else noTopics" class="space-y-4">
+                  <div 
+                    *ngFor="let topic of recentTopics; let i = index"
+                    class="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all duration-200">
+                    <div class="flex items-center justify-between mb-3">
+                      <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                          <span class="text-white text-sm">📄</span>
+                        </div>
+                        <div>
+                          <h3 class="font-bold text-gray-900">{{ topic.name }}</h3>
+                          <p class="text-sm text-gray-600">Topic #{{ i + 1 }}</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="flex gap-2">
+                      <button 
+                        (click)="onSelectPanel({type: 'summary', topic: topic.name})"
+                        class="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-blue-100 text-blue-700 rounded text-sm font-medium hover:bg-blue-200 transition-colors">
+                        <span>📖</span>
+                        <span>Summary</span>
+                      </button>
+                      <button 
+                        (click)="onSelectPanel({type: 'flashcards', topic: topic.name})"
+                        class="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-cyan-100 text-cyan-700 rounded text-sm font-medium hover:bg-cyan-200 transition-colors">
+                        <span>💡</span>
+                        <span>Cards</span>
+                      </button>
+                      <button 
+                        (click)="onSelectPanel({type: 'quiz', topic: topic.name})"
+                        class="flex-1 flex items-center justify-center gap-1 px-3 py-2 bg-purple-100 text-purple-700 rounded text-sm font-medium hover:bg-purple-200 transition-colors">
+                        <span>❓</span>
+                        <span>Quiz</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                <ng-template #noTopics>
+                  <div class="text-center py-8">
+                    <div class="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <span class="text-blue-600 text-3xl">📚</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2">Start Your Learning Journey</h3>
+                    <p class="text-gray-600 mb-4">Upload your first document to create interactive learning content.</p>
+                    <button 
+                      (click)="onUploadNewTopic()"
+                      class="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-2 rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg">
+                      🚀 Upload Your First Document
+                    </button>
+                  </div>
+                </ng-template>
+              </div>
+
+              <!-- Study Progress Section -->
+              <div class="grid md:grid-cols-2 gap-6">
+                <!-- Level Progress -->
+              <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+                  <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <span class="text-2xl">🚀</span>
+                    <span>Level Progress</span>
+                  </h3>
+                  
+                  <div class="text-center mb-4">
+                    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <span class="text-white text-2xl">{{ getCurrentLevel()?.badge || '🌱' }}</span>
+                    </div>
+                    <h4 class="text-lg font-bold text-gray-900">{{ getCurrentLevel()?.name || 'Novice Learner' }}</h4>
+                    <p class="text-gray-600">Level {{ userStats?.level || 1 }}</p>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="mb-4">
+                  <div class="flex justify-between text-sm text-gray-600 mb-2">
+                    <span>{{ userStats?.currentLevelPoints || 0 }} / {{ userStats?.pointsToNextLevel || 0 }} points</span>
+                      <span class="font-bold text-blue-600">{{ getProgressPercentage() | number:'1.0-0' }}%</span>
+                  </div>
+                  <div class="w-full bg-gray-200 rounded-full h-3">
+                    <div 
+                      class="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full transition-all duration-500"
+                      [style.width.%]="getProgressPercentage()">
+                    </div>
+                  </div>
+                </div>
+                
+                  <!-- Next Level -->
+                  <div *ngIf="getNextLevel()" class="text-center p-3 bg-blue-50 rounded-lg">
+                    <p class="text-sm text-gray-600 mb-1">Next Level</p>
+                    <div class="flex items-center justify-center gap-2">
+                      <span class="text-lg">{{ getNextLevel()?.badge }}</span>
+                      <span class="font-semibold text-gray-900 text-sm">{{ getNextLevel()?.name }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Study Stats -->
+                <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+                  <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <span class="text-2xl">📊</span>
+                    <span>Study Stats</span>
+                  </h3>
+                  
+                  <div class="grid grid-cols-2 gap-4">
+                    <div class="text-center p-3 bg-blue-50 rounded-lg">
+                      <div class="text-xl font-bold text-blue-600">{{ formatStudyTime(userStats?.totalStudyTime || 0) }}</div>
+                      <div class="text-xs text-gray-600">Study Time</div>
+                    </div>
+                    
+                    <div class="text-center p-3 bg-green-50 rounded-lg">
+                      <div class="text-xl font-bold text-green-600">{{ userStats?.totalQuizzesTaken || 0 }}</div>
+                      <div class="text-xs text-gray-600">Quizzes</div>
+                    </div>
+                    
+                    <div class="text-center p-3 bg-purple-50 rounded-lg">
+                      <div class="text-xl font-bold text-purple-600">{{ userStats?.longestStreak || 0 }}</div>
+                      <div class="text-xs text-gray-600">Best Streak</div>
+                    </div>
+                    
+                    <div class="text-center p-3 bg-orange-50 rounded-lg">
+                      <div class="text-xl font-bold text-orange-600">{{ userStats?.totalTopics || 0 }}</div>
+                      <div class="text-xs text-gray-600">Topics Created</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Actions & Achievements -->
+            <div class="space-y-6">
+
+              <!-- Quick Actions -->
+              <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+                <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <span class="text-2xl">⚡</span>
+                  <span>Quick Actions</span>
+                </h3>
+                
+                <div class="space-y-3">
+                  <button 
+                    (click)="onUploadNewTopic()"
+                    class="w-full flex items-center gap-3 p-3 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg">
+                    <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                      <span class="text-white text-sm">📤</span>
+                    </div>
+                    <div class="text-left">
+                      <div class="font-semibold text-sm">Upload New Topic</div>
+                      <div class="text-blue-100 text-xs">Add learning content</div>
+                    </div>
+                  </button>
+                  
+                  <button 
+                    (click)="onSelectPanel({type: 'summary', topic: topics[0].name})"
+                    *ngIf="hasTopics"
+                    class="w-full flex items-center gap-3 p-3 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg">
+                    <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                      <span class="text-white text-sm">📖</span>
+                    </div>
+                    <div class="text-left">
+                      <div class="font-semibold text-sm">Continue Learning</div>
+                      <div class="text-green-100 text-xs">Review latest topic</div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Recent Achievements -->
+              <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+                <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <span class="text-2xl">🏆</span>
+                  <span>Recent Achievements</span>
+                </h3>
+                
+                <div *ngIf="getUnlockedAchievements().length > 0; else noAchievements" class="space-y-3">
+                  <div 
+                    *ngFor="let achievement of getUnlockedAchievements().slice(0, 3)"
+                    class="flex items-center gap-3 p-3 bg-green-50 rounded-lg border border-green-200">
+                    <div class="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
+                      <span class="text-white text-xs">{{ achievement.icon }}</span>
+                    </div>
+                    <div class="flex-1">
+                      <h4 class="font-semibold text-gray-900 text-sm">{{ achievement.name }}</h4>
+                      <p class="text-xs text-gray-600">{{ achievement.description }}</p>
+                    </div>
+                    <span class="text-green-600 font-bold text-sm">+{{ achievement.points }}</span>
+                  </div>
+                </div>
+                
+                <ng-template #noAchievements>
+                  <div class="text-center py-6">
+                    <div class="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                      <span class="text-gray-400 text-xl">🏆</span>
+                    </div>
+                    <p class="text-gray-600 text-sm">No achievements yet</p>
+                    <p class="text-xs text-gray-500">Start learning to unlock achievements!</p>
+                  </div>
+                </ng-template>
+              </div>
+
+              <!-- Study Tips -->
+              <div class="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl p-6 shadow-lg border border-yellow-200">
+                <h3 class="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                  <span class="text-2xl">💡</span>
+                  <span>Study Tips</span>
+                </h3>
+                
+                <div class="space-y-3">
+                  <div class="flex items-start gap-2">
+                    <span class="text-yellow-600 text-sm font-bold">•</span>
+                    <p class="text-sm text-gray-700">Study daily to maintain your streak</p>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <span class="text-yellow-600 text-sm font-bold">•</span>
+                    <p class="text-sm text-gray-700">Take quizzes to earn more points</p>
+                  </div>
+                  <div class="flex items-start gap-2">
+                    <span class="text-yellow-600 text-sm font-bold">•</span>
+                    <p class="text-sm text-gray-700">Review flashcards regularly</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Individual Topic Panels -->
+      <div *ngIf="!showDashboard && selectedTopic" class="min-h-screen">
+        <div class="">
+          
+          <!-- Summary Panel -->
+          <div *ngIf="selectedPanel === 'summary'" class="space-y-6">
+            <div class="mb-6">
+              <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ selectedTopic }}</h1>
+              <p class="text-gray-600">Summary and key points</p>
+            </div>
+            <app-summary-card [summary]="getTopicSummary(selectedTopic)"></app-summary-card>
+          </div>
+
+          <!-- Flashcards Panel -->
+          <div *ngIf="selectedPanel === 'flashcards'" class="space-y-6">
+            <div class="mb-6">
+              <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ selectedTopic }}</h1>
+              <p class="text-gray-600">Interactive flashcards</p>
+            </div>
+            <app-flashcards-carousel [flashcards]="getTopicFlashcards(selectedTopic)"></app-flashcards-carousel>
+            </div>
+            
+          <!-- Quiz Panel -->
+          <div *ngIf="selectedPanel === 'quiz'" class="space-y-6">
+            <div class="mb-6">
+              <h1 class="text-3xl font-bold text-gray-900 mb-2">{{ selectedTopic }}</h1>
+              <p class="text-gray-600">Test your knowledge</p>
+            </div>
+            <app-quiz-panel [quiz]="getTopicQuiz(selectedTopic)"></app-quiz-panel>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Leaderboard Panel -->
+      <div *ngIf="selectedPanel === 'leaderboard'" class="w-full">
+        <app-leaderboard></app-leaderboard>
+      </div>
+            
+      <!-- Welcome Form for New Users -->
+      <div *ngIf="showWelcomeForm" class="min-h-screen">
+        <div class="flex flex-col items-center justify-center min-h-[80vh] text-center">
+          <div class="max-w-4xl mx-auto px-6">
+            <!-- Welcome Header -->
+            <div class="mb-8">
+              <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-2xl flex items-center justify-center shadow-xl">
+                <span class="pi pi-rocket text-3xl text-white"></span>
+              </div>
+              <h1 class="text-4xl font-bold text-gray-900 mb-4">Welcome to InceptIQ!</h1>
+              <p class="text-xl text-gray-600 mb-8">
+                Your AI-powered learning companion is ready to transform your documents into interactive learning experiences.
+              </p>
+            </div>
+
+            <!-- Features Grid -->
+            <div class="grid md:grid-cols-3 gap-6 mb-12">
+              <div class="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
+                <div class="w-12 h-12 mx-auto mb-4 bg-blue-100 rounded-lg flex items-center justify-center">
+                  <span class="pi pi-file-text text-blue-600 text-xl"></span>
+                </div>
+                <h3 class="font-semibold text-gray-900 mb-2">Smart Summaries</h3>
+                <p class="text-sm text-gray-600">AI-generated summaries that capture the key points of your documents</p>
+              </div>
+
+              <div class="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
+                <div class="w-12 h-12 mx-auto mb-4 bg-cyan-100 rounded-lg flex items-center justify-center">
+                  <span class="pi pi-lightbulb text-cyan-600 text-xl"></span>
+                </div>
+                <h3 class="font-semibold text-gray-900 mb-2">Interactive Flashcards</h3>
+                <p class="text-sm text-gray-600">Create and study with AI-generated flashcards for better retention</p>
+              </div>
+
+              <div class="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
+                <div class="w-12 h-12 mx-auto mb-4 bg-green-100 rounded-lg flex items-center justify-center">
+                  <span class="pi pi-question-circle text-green-600 text-xl"></span>
+                </div>
+                <h3 class="font-semibold text-gray-900 mb-2">Smart Quizzes</h3>
+                <p class="text-sm text-gray-600">Test your knowledge with AI-generated quizzes and assessments</p>
+              </div>
+            </div>
+
+            <!-- Call to Action -->
+                <div class="space-y-4">
+                  <button 
+                (click)="onStartLearning()"
+                class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center gap-3 mx-auto text-lg">
+                <span class="pi pi-rocket"></span>
+                <span>Start Learning Now</span>
+                  </button>
+              <p class="text-sm text-gray-500">
+                Upload your first document and experience the power of AI-driven learning
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Upload Topic Form -->
+      <div *ngIf="showUploadForm" class="min-h-screen">
+      <app-dashboard 
+          [showUploadForm]="true"
+        [topics]="topics"
+        (uploadNewTopic)="onUploadNewTopic()"
+        (startLearning)="onStartLearning()"
+        (cancelUploadForm)="onCancelUpload()"
+        (selectPanel)="onSelectPanel($event)">
+      </app-dashboard>
+      </div>
+    </main>
+  </div>
+  <app-ai-chat-fab *ngIf="topics.length > 0" />
+</div> 

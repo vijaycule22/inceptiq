@@ -1,0 +1,69 @@
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.*
+
+# Build output
+/dist/
+/build/
+/tmp/
+
+# Dependency directories
+backend/node_modules/
+frontend/node_modules/
+
+# Compiled output
+backend/dist/
+frontend/dist/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Test coverage
+coverage/
+backend/coverage/
+frontend/coverage/
+
+# Misc
+*.tgz
+*.swp
+*.swo
+
+# Database
+backend/inceptiq.db
+
+# Production files
+backend/setup-production.js
+backend/setup-real-email.js
+
+# Angular build artifacts
+frontend/.angular/cache/
+
+# Local environment
+backend/.env.local
+frontend/.env.local
+
+# Others
+backend/debug-email.js
+backend/test-*.js
+
+# npm package lock
+backend/package-lock.json
+frontend/package-lock.json 
