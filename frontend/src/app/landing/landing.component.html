@@ -67,14 +67,14 @@
   </header>
 
   <!-- Hero Section -->
-  <div class="relative z-10 text-center max-w-5xl mx-auto px-4 py-16">
+  <div class="relative z-10 text-center max-w-6xl mx-auto px-4 py-16">
     <div class="max-w-6xl mx-auto">
       <div class="text-center mb-16">
         <div class="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-xs font-medium mb-6">
           <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
           AI-Powered Learning Platform
         </div>
-        <h1 class="text-4xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+        <h1 class="text-4xl max-w-4xl mx-auto lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
           Transform Documents into
           <span class="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">Interactive Learning</span>
         </h1>
@@ -101,7 +101,7 @@
           <div class="absolute top-1/2 -right-14 w-28 h-28 bg-gradient-to-br from-purple-400 to-pink-400 opacity-25 rounded-full animate-float-medium blur-xl"></div>
           <div class="absolute bottom-0 left-1/2 w-24 h-24 bg-gradient-to-br from-green-400 to-blue-400 opacity-20 rounded-full animate-float-fast blur-lg"></div>
         </div>
-        <div class="grid md:grid-cols-3 gap-8 justify-center">
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 justify-center">
           <!-- Smart Summaries Card -->
           <div class="bg-white gap-2 rounded-2xl p-7 text-gray-900 relative overflow-hidden group shadow-2xl border border-blue-100 hover:shadow-blue-200 transition-all duration-300 hover:-translate-y-2 hover:scale-105 min-h-[300px] flex flex-col justify-between w-full max-w-[380px] md:max-w-[420px] mx-auto">
             <div>
@@ -118,6 +118,25 @@
                 <span>Key points at a glance</span>
               </div>
               <div class="absolute bottom-4 right-4 w-8 h-8 bg-blue-200 rounded-full opacity-40 animate-ping"></div>
+            </div>
+          </div>
+
+          <!-- AI Study Assistant Card -->
+          <div class="bg-white gap-2 rounded-2xl p-7 text-gray-900 relative overflow-hidden group shadow-2xl border border-green-100 hover:shadow-green-200 transition-all duration-300 hover:-translate-y-2 hover:scale-105 min-h-[300px] flex flex-col justify-between w-full max-w-[380px] md:max-w-[420px] mx-auto">
+            <div>
+              <div class="absolute top-0 right-0 w-20 h-20 bg-green-100 rounded-full -mr-8 -mt-8 group-hover:scale-110 transition-transform duration-300 blur-lg"></div>
+              <div class="w-12 h-12 m-auto bg-gradient-to-br from-green-500 to-emerald-400 rounded-2xl flex items-center justify-center mb-5 shadow-lg group-hover:scale-110 transition-transform duration-300">
+                <span class="pi pi-comments text-2xl text-white animate-float-medium"></span>
+              </div>
+              <h3 class="text-lg font-extrabold mb-3 group-hover:text-green-700 transition-colors tracking-tight">AI Study Assistant</h3>
+              <p class="text-sm opacity-90 mb-4 leading-relaxed">Get instant help with your studies through our intelligent AI assistant that understands your content.</p>
+            </div>
+            <div>
+              <div class="flex items-center gap-2 text-sm opacity-90">
+                <span class="pi pi-check-circle text-green-500 animate-pulse"></span>
+                <span>24/7 study support</span>
+              </div>
+              <div class="absolute bottom-4 right-4 w-8 h-8 bg-green-200 rounded-full opacity-40 animate-ping"></div>
             </div>
           </div>
 
@@ -176,8 +195,8 @@
       <div class="grid lg:grid-cols-2 gap-12 items-center">
         <div class="space-y-8">
           <div class="flex items-start gap-4">
-            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0">
-              <span class="pi pi-rocket text-xl text-white"></span>
+            <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+              <span class="pi pi-bolt text-xl text-white animate-pulse"></span>
             </div>
             <div>
               <h3 class="text-xl font-bold text-gray-900 mb-2">Instant Learning</h3>
@@ -185,8 +204,17 @@
             </div>
           </div>
           <div class="flex items-start gap-4">
-            <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center flex-shrink-0">
-              <span class="pi pi-brain text-xl text-white"></span>
+            <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+              <span class="pi pi-comments text-xl text-white animate-float-medium"></span>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-gray-900 mb-2">AI Study Assistant</h3>
+              <p class="text-gray-600">Our intelligent AI assistant is available 24/7 to provide instant help and answer your questions.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+              <span class="pi pi-cog text-xl text-white animate-spin-slow"></span>
             </div>
             <div>
               <h3 class="text-xl font-bold text-gray-900 mb-2">Adaptive Intelligence</h3>
@@ -194,8 +222,8 @@
             </div>
           </div>
           <div class="flex items-start gap-4">
-            <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0">
-              <span class="pi pi-chart-line text-xl text-white"></span>
+            <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+              <span class="pi pi-chart-line text-xl text-white animate-bounce-slow"></span>
             </div>
             <div>
               <h3 class="text-xl font-bold text-gray-900 mb-2">Progress Tracking</h3>
@@ -222,6 +250,15 @@
                 <h4 class="font-semibold text-gray-900">AI Processing</h4>
               </div>
               <p class="text-sm text-gray-600">Advanced NLP extracts key concepts and insights</p>
+            </div>
+            <div class="bg-white rounded-2xl p-6 shadow-lg">
+              <div class="flex items-center gap-3 mb-3">
+                <div class="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
+                  <span class="pi pi-comments text-emerald-600"></span>
+                </div>
+                <h4 class="font-semibold text-gray-900">AI Assistant</h4>
+              </div>
+              <p class="text-sm text-gray-600">24/7 study support and instant help</p>
             </div>
             <div class="bg-white rounded-2xl p-6 shadow-lg">
               <div class="flex items-center gap-3 mb-3">

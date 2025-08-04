@@ -31,23 +31,23 @@
       <!-- Compact Header with Integrated Stats -->
       <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 mb-6 overflow-hidden">
         <!-- Header Section -->
-        <div class="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-4">
+        <div class="bg-gradient-to-r from-blue-600 to-cyan-600 text-white border-b border-gray-200 p-3">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-                <span class="text-xl">🏆</span>
+              <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                <span class="pi pi-trophy text-white text-sm"></span>
               </div>
               <div>
-                <h1 class="text-2xl font-bold">Leaderboard</h1>
-                <p class="text-blue-100 text-sm">See how you rank among other learners</p>
+                <h1 class="text-lg font-medium text-white">Leaderboard</h1>
+                <p class="text-blue-100 text-xs">Track progress and compare with others</p>
               </div>
             </div>
             
             <!-- User Rank Badge -->
-            <div *ngIf="getCurrentUserRank() > 0" class="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2">
+            <div *ngIf="getCurrentUserRank() > 0" class="bg-white/20 rounded-lg px-3 py-1">
               <div class="text-center">
-                <div class="text-xs text-blue-100">Your Rank</div>
-                <div class="text-xl font-bold">#{{ getCurrentUserRank() }}</div>
+                <div class="text-xs text-blue-100">Rank</div>
+                <div class="text-sm font-semibold text-white">#{{ getCurrentUserRank() }}</div>
               </div>
             </div>
           </div>

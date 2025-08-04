@@ -30,23 +30,23 @@
       <!-- Compact Header with Quiz Info -->
       <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 mb-6 overflow-hidden">
         <!-- Header Section -->
-        <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-4">
+        <div class="bg-gradient-to-r from-blue-600 to-cyan-600 text-white border-b border-gray-200 p-3">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-                <span class="pi pi-question-circle text-xl"></span>
+              <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                <span class="pi pi-question-circle text-white text-sm"></span>
               </div>
               <div>
-                <h1 class="text-2xl font-bold">Quiz</h1>
-                <p class="text-purple-100 text-sm">Test your knowledge with interactive questions</p>
+                <h1 class="text-lg font-medium text-white">Quiz</h1>
+                <p class="text-blue-100 text-xs">Test your knowledge</p>
               </div>
             </div>
             
             <!-- Quiz Progress Badge -->
-            <div class="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2">
+            <div class="bg-white/20 rounded-lg px-3 py-1">
               <div class="text-center">
-                <div class="text-xs text-purple-100">Progress</div>
-                <div class="text-xl font-bold">{{ getAnsweredCount() }}/{{ totalQuestions }}</div>
+                <div class="text-xs text-blue-100">Progress</div>
+                <div class="text-sm font-semibold text-white">{{ getAnsweredCount() }}/{{ totalQuestions }}</div>
               </div>
             </div>
           </div>
@@ -92,6 +92,58 @@
         </div>
       </div>
 
+      <!-- Difficulty Level Selection -->
+      <div class="mb-6 bg-white/60 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 overflow-hidden">
+        <div class="bg-gradient-to-r from-blue-600 to-cyan-600 text-white border-b border-gray-200 p-3">
+          <div class="flex items-center gap-3">
+            <div class="w-6 h-6 bg-white/20 rounded-lg flex items-center justify-center">
+              <span class="pi pi-filter text-white text-xs"></span>
+            </div>
+            <h3 class="text-sm font-medium text-white">Select Difficulty Level</h3>
+          </div>
+        </div>
+        <div class="p-4">
+          <div class="grid grid-cols-4 gap-3">
+            <button (click)="selectedDifficulty = 'all'; onDifficultyChange()" 
+                    [ngClass]="selectedDifficulty === 'all' ? 'bg-blue-500 text-white' : 'bg-gray-100 hover:bg-gray-200'"
+                    class="flex items-center gap-2 p-3 rounded-xl transition-colors text-left">
+              <span class="pi pi-globe"></span>
+              <div>
+                <span class="text-sm font-medium">All Levels</span>
+                <div class="text-xs opacity-75">{{ getDifficultyStats().beginnerCount + getDifficultyStats().intermediateCount + getDifficultyStats().advancedCount }} questions</div>
+              </div>
+            </button>
+            <button (click)="selectedDifficulty = 'beginner'; onDifficultyChange()" 
+                    [ngClass]="selectedDifficulty === 'beginner' ? 'bg-green-500 text-white' : 'bg-gray-100 hover:bg-gray-200'"
+                    class="flex items-center gap-2 p-3 rounded-xl transition-colors text-left">
+              <span class="pi pi-star"></span>
+              <div>
+                <span class="text-sm font-medium">Beginner</span>
+                <div class="text-xs opacity-75">{{ getDifficultyStats().beginnerCount }} questions</div>
+              </div>
+            </button>
+            <button (click)="selectedDifficulty = 'intermediate'; onDifficultyChange()" 
+                    [ngClass]="selectedDifficulty === 'intermediate' ? 'bg-yellow-500 text-white' : 'bg-gray-100 hover:bg-gray-200'"
+                    class="flex items-center gap-2 p-3 rounded-xl transition-colors text-left">
+              <span class="pi pi-chart-line"></span>
+              <div>
+                <span class="text-sm font-medium">Intermediate</span>
+                <div class="text-xs opacity-75">{{ getDifficultyStats().intermediateCount }} questions</div>
+              </div>
+            </button>
+            <button (click)="selectedDifficulty = 'advanced'; onDifficultyChange()" 
+                    [ngClass]="selectedDifficulty === 'advanced' ? 'bg-purple-500 text-white' : 'bg-gray-100 hover:bg-gray-200'"
+                    class="flex items-center gap-2 p-3 rounded-xl transition-colors text-left">
+              <span class="pi pi-crown"></span>
+              <div>
+                <span class="text-sm font-medium">Advanced</span>
+                <div class="text-xs opacity-75">{{ getDifficultyStats().advancedCount }} questions</div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- Quiz Content with Enhanced Card -->
       <div class="bg-white/60 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/20">
         <!-- Quiz Header (Progress) -->
@@ -112,6 +164,35 @@
             <h3 class="score-message">{{ getScoreMessage() }}</h3>
             <p class="score-text">You scored {{ score }} out of {{ totalQuestions }}</p>
             <div class="score-percentage">{{ getScorePercentage() }}%</div>
+            
+            <!-- Difficulty-specific feedback -->
+            <div class="mt-4 p-4 rounded-xl" 
+                 [ngClass]="selectedDifficulty === 'beginner' ? 'bg-green-50 border border-green-200' : 
+                            selectedDifficulty === 'intermediate' ? 'bg-yellow-50 border border-yellow-200' :
+                            selectedDifficulty === 'advanced' ? 'bg-purple-50 border border-purple-200' : 
+                            'bg-blue-50 border border-blue-200'">
+              <div class="flex items-center gap-2 mb-2">
+                <span class="pi" 
+                      [ngClass]="selectedDifficulty === 'beginner' ? 'pi-star' : 
+                                 selectedDifficulty === 'intermediate' ? 'pi-chart-line' :
+                                 selectedDifficulty === 'advanced' ? 'pi-crown' : 'pi-globe'"></span>
+                <span class="font-semibold" 
+                      [ngClass]="selectedDifficulty === 'beginner' ? 'text-green-700' : 
+                                 selectedDifficulty === 'intermediate' ? 'text-yellow-700' :
+                                 selectedDifficulty === 'advanced' ? 'text-purple-700' : 'text-blue-700'">
+                  {{ getDifficultyLabel(selectedDifficulty) }} Level Quiz
+                </span>
+              </div>
+              <p class="text-sm" 
+                 [ngClass]="selectedDifficulty === 'beginner' ? 'text-green-600' : 
+                            selectedDifficulty === 'intermediate' ? 'text-yellow-600' :
+                            selectedDifficulty === 'advanced' ? 'text-purple-600' : 'text-blue-600'">
+                {{ selectedDifficulty === 'beginner' ? 'Great for building foundational knowledge!' : 
+                   selectedDifficulty === 'intermediate' ? 'Perfect for testing comprehension and application!' :
+                   selectedDifficulty === 'advanced' ? 'Excellent for testing deep understanding!' : 
+                   'Mixed difficulty for comprehensive assessment!' }}
+              </p>
+            </div>
           </div>
           
           <!-- Review Toggle -->
@@ -124,9 +205,15 @@
             <!-- Review Answers -->
             <div *ngIf="showReview" class="review-answers">
               <h4 class="review-title">Review Your Answers:</h4>
-              <div *ngFor="let question of quiz; let i = index" class="review-item" 
+              <div *ngFor="let question of filteredQuiz; let i = index" class="review-item" 
                    [ngClass]="isCorrectAnswer(question, userAnswers[i]) ? 'correct' : 'incorrect'">
-                <p class="review-question">{{ i + 1 }}. {{ question.question }}</p>
+                <div class="flex items-center gap-2 mb-2">
+                  <p class="review-question">{{ i + 1 }}. {{ question.question }}</p>
+                  <span class="px-2 py-1 rounded-full text-xs font-medium text-white"
+                        [ngClass]="getDifficultyColor(question.difficulty)">
+                    {{ getDifficultyLabel(question.difficulty) }}
+                  </span>
+                </div>
                 <p class="review-answer">Your answer: <span class="user-answer">{{ userAnswers[i] || 'Not answered' }}</span></p>
                 <p class="review-answer">Correct answer: <span class="correct-answer">{{ question.answer }}</span></p>
               </div>
@@ -140,11 +227,17 @@
         </div>
 
         <!-- Single Question Display -->
-        <div *ngIf="!quizCompleted && quiz.length > 0" class="question-display">
+        <div *ngIf="!quizCompleted && filteredQuiz.length > 0" class="question-display">
           <div class="question-card enhanced-question-card compact redesigned">
             <!-- Question Content -->
             <div class="question-content">
-              <div class="question-text">{{ getCurrentQuestion().question }}</div>
+              <div class="flex items-center justify-between mb-4">
+                <div class="question-text">{{ getCurrentQuestion().question }}</div>
+                <span class="px-3 py-1 rounded-full text-sm font-medium text-white"
+                      [ngClass]="getDifficultyColor(getCurrentQuestion().difficulty)">
+                  {{ getDifficultyLabel(getCurrentQuestion().difficulty) }}
+                </span>
+              </div>
               
               <div class="options-list enhanced-options-list compact redesigned">
                 <div *ngFor="let option of getParsedOptions(getCurrentQuestion()); let optionIndex = index" 
@@ -215,9 +308,17 @@
         </div>
 
         <!-- No Questions Available -->
-        <div *ngIf="quiz.length === 0" class="no-questions">
+        <div *ngIf="filteredQuiz.length === 0" class="no-questions">
           <div class="no-questions-icon">📝</div>
-          <p class="no-questions-text">No quiz questions available for this topic.</p>
+          <p class="no-questions-text">
+            {{ getNoQuestionsMessage() }}
+          </p>
+          <div *ngIf="selectedDifficulty !== 'all'" class="mt-4">
+            <button (click)="selectedDifficulty = 'all'; onDifficultyChange()" 
+                    class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg transition-colors">
+              Try All Difficulty Levels
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -29,11 +29,46 @@ export class QuizPanelComponent {
   score = 0;
   totalQuestions = 0;
   showReview = false;
+  selectedDifficulty: 'all' | 'beginner' | 'intermediate' | 'advanced' = 'all';
+  filteredQuiz: any[] = [];
 
   constructor(private gamificationService: GamificationService) {}
 
   ngOnInit() {
-    this.totalQuestions = this.quiz.length;
+    this.filterQuizByDifficulty();
+  }
+
+  ngOnChanges() {
+    this.filterQuizByDifficulty();
+  }
+
+  filterQuizByDifficulty() {
+    if (this.selectedDifficulty === 'all') {
+      this.filteredQuiz = this.quiz;
+    } else {
+      this.filteredQuiz = this.quiz.filter(
+        (q) => q.difficulty === this.selectedDifficulty
+      );
+    }
+    this.totalQuestions = this.filteredQuiz.length;
+    this.resetQuiz();
+  }
+
+  onDifficultyChange() {
+    this.filterQuizByDifficulty();
+  }
+
+  getDifficultyStats() {
+    const beginnerCount = this.quiz.filter(
+      (q) => q.difficulty === 'beginner'
+    ).length;
+    const intermediateCount = this.quiz.filter(
+      (q) => q.difficulty === 'intermediate'
+    ).length;
+    const advancedCount = this.quiz.filter(
+      (q) => q.difficulty === 'advanced'
+    ).length;
+    return { beginnerCount, intermediateCount, advancedCount };
   }
 
   selectAnswer(questionIndex: number, answer: string) {
@@ -71,7 +106,7 @@ export class QuizPanelComponent {
   }
 
   getCurrentQuestion() {
-    return this.quiz[this.currentQuestionIndex];
+    return this.filteredQuiz[this.currentQuestionIndex];
   }
 
   getParsedOptions(question: any): string[] {
@@ -87,16 +122,31 @@ export class QuizPanelComponent {
 
   submitQuiz() {
     this.score = 0;
-    this.quiz.forEach((question, index) => {
+    this.filteredQuiz.forEach((question, index) => {
       if (this.userAnswers[index] === question.answer) {
         this.score++;
       }
     });
 
     const scorePercentage = (this.score / this.totalQuestions) * 100;
+    const difficulty =
+      this.selectedDifficulty === 'all' ? 'mixed' : this.selectedDifficulty;
 
-    // Add gamification points for completing quiz
-    this.gamificationService.addPoints(50, 'Quiz completed');
+    // Add gamification points for completing quiz with difficulty bonus
+    const basePoints = 50;
+    const difficultyBonus =
+      this.selectedDifficulty === 'advanced'
+        ? 25
+        : this.selectedDifficulty === 'intermediate'
+        ? 15
+        : this.selectedDifficulty === 'beginner'
+        ? 10
+        : 15;
+
+    this.gamificationService.addPoints(
+      basePoints + difficultyBonus,
+      `Quiz completed (${difficulty})`
+    );
     this.gamificationService.addQuizCompletion(scorePercentage);
     this.gamificationService.updateStreak();
 
@@ -123,11 +173,33 @@ export class QuizPanelComponent {
 
   getScoreMessage(): string {
     const percentage = this.getScorePercentage();
-    if (percentage >= 90) return 'Excellent! 🎉';
-    if (percentage >= 80) return 'Great job! 👍';
-    if (percentage >= 70) return 'Good work! 😊';
-    if (percentage >= 60) return 'Not bad! 📚';
-    return 'Keep studying! 💪';
+    const difficulty = this.selectedDifficulty;
+
+    if (difficulty === 'advanced') {
+      if (percentage >= 90) return 'Exceptional! 🏆';
+      if (percentage >= 80) return 'Outstanding! 🌟';
+      if (percentage >= 70) return 'Excellent! 💪';
+      if (percentage >= 60) return 'Good work! 👍';
+      return 'Keep practicing! 📚';
+    } else if (difficulty === 'intermediate') {
+      if (percentage >= 90) return 'Excellent! 🌟';
+      if (percentage >= 80) return 'Great job! 👍';
+      if (percentage >= 70) return 'Well done! 😊';
+      if (percentage >= 60) return 'Good progress! 📖';
+      return 'Keep learning! 💪';
+    } else if (difficulty === 'beginner') {
+      if (percentage >= 90) return 'Perfect! 🎉';
+      if (percentage >= 80) return 'Great job! 👍';
+      if (percentage >= 70) return 'Well done! 😊';
+      if (percentage >= 60) return 'Good start! 📖';
+      return 'Keep learning! 💪';
+    } else {
+      if (percentage >= 90) return 'Amazing! 🎯';
+      if (percentage >= 80) return 'Fantastic! 🌟';
+      if (percentage >= 70) return 'Very good! 👍';
+      if (percentage >= 60) return 'Not bad! 📚';
+      return 'Keep studying! 💪';
+    }
   }
 
   areAllQuestionsAnswered(): boolean {
@@ -146,11 +218,33 @@ export class QuizPanelComponent {
   getPerformanceLevel(): string {
     if (this.quizCompleted) {
       const percentage = this.getScorePercentage();
-      if (percentage >= 90) return 'Expert';
-      if (percentage >= 80) return 'Advanced';
-      if (percentage >= 70) return 'Intermediate';
-      if (percentage >= 60) return 'Beginner';
-      return 'Novice';
+      const difficulty = this.selectedDifficulty;
+
+      if (difficulty === 'advanced') {
+        if (percentage >= 90) return 'Expert';
+        if (percentage >= 80) return 'Advanced';
+        if (percentage >= 70) return 'Intermediate';
+        if (percentage >= 60) return 'Beginner';
+        return 'Novice';
+      } else if (difficulty === 'intermediate') {
+        if (percentage >= 90) return 'Proficient';
+        if (percentage >= 80) return 'Competent';
+        if (percentage >= 70) return 'Intermediate';
+        if (percentage >= 60) return 'Learning';
+        return 'Starting';
+      } else if (difficulty === 'beginner') {
+        if (percentage >= 90) return 'Master';
+        if (percentage >= 80) return 'Proficient';
+        if (percentage >= 70) return 'Competent';
+        if (percentage >= 60) return 'Learning';
+        return 'Starting';
+      } else {
+        if (percentage >= 90) return 'Expert';
+        if (percentage >= 80) return 'Advanced';
+        if (percentage >= 70) return 'Intermediate';
+        if (percentage >= 60) return 'Beginner';
+        return 'Novice';
+      }
     }
 
     // If quiz not completed, base on answered questions
@@ -161,5 +255,39 @@ export class QuizPanelComponent {
     if (answeredPercentage >= 40) return 'Progressing';
     if (answeredPercentage >= 20) return 'Starting';
     return 'New';
+  }
+
+  getDifficultyColor(difficulty: string): string {
+    switch (difficulty) {
+      case 'beginner':
+        return 'bg-green-500';
+      case 'intermediate':
+        return 'bg-yellow-500';
+      case 'advanced':
+        return 'bg-purple-500';
+      default:
+        return 'bg-blue-500';
+    }
+  }
+
+  getDifficultyLabel(difficulty: string): string {
+    switch (difficulty) {
+      case 'beginner':
+        return 'Beginner';
+      case 'intermediate':
+        return 'Intermediate';
+      case 'advanced':
+        return 'Advanced';
+      default:
+        return 'Mixed';
+    }
+  }
+
+  getNoQuestionsMessage(): string {
+    if (this.selectedDifficulty === 'all') {
+      return 'No quiz questions available for this topic.';
+    } else {
+      return `No ${this.selectedDifficulty} level questions available for this topic.`;
+    }
   }
 }

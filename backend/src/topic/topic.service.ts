@@ -328,7 +328,80 @@ Document content: ${text.substring(0, 2000)}`;
 
   private async generateQuizzes(text: string): Promise<any[]> {
     try {
-      const prompt = `Create exactly 5 detailed multiple-choice quiz questions from the following document. Each question should test understanding of different important aspects of the content. 
+      // Generate all three difficulty levels
+      const beginnerQuizzes = await this.generateDifficultyQuizzes(
+        text,
+        'beginner',
+      );
+      const intermediateQuizzes = await this.generateDifficultyQuizzes(
+        text,
+        'intermediate',
+      );
+      const advancedQuizzes = await this.generateDifficultyQuizzes(
+        text,
+        'advanced',
+      );
+
+      // Combine and structure quizzes with difficulty levels
+      const allQuizzes = [
+        ...beginnerQuizzes.map((quiz) => ({ ...quiz, difficulty: 'beginner' })),
+        ...intermediateQuizzes.map((quiz) => ({
+          ...quiz,
+          difficulty: 'intermediate',
+        })),
+        ...advancedQuizzes.map((quiz) => ({ ...quiz, difficulty: 'advanced' })),
+      ];
+
+      return allQuizzes;
+    } catch (error) {
+      console.error('Gemini API error in generateQuizzes:', error);
+      return [
+        {
+          question: 'Quiz generation is temporarily unavailable',
+          options: [
+            'Please try again',
+            'Contact support',
+            'Check connection',
+            'None of the above',
+          ],
+          answer: 'Please try again',
+          difficulty: 'beginner',
+        },
+      ];
+    }
+  }
+
+  private async generateDifficultyQuizzes(
+    text: string,
+    difficulty: 'beginner' | 'intermediate' | 'advanced',
+  ): Promise<any[]> {
+    try {
+      const difficultyConfig = {
+        beginner: {
+          count: 4,
+          instructions:
+            'Create 4 beginner-level questions that test basic understanding and recall. Use simple language and focus on fundamental concepts, definitions, and basic facts.',
+          focus: 'Focus on basic facts, definitions, and simple concepts',
+        },
+        intermediate: {
+          count: 4,
+          instructions:
+            'Create 4 intermediate-level questions that test comprehension and application. Use moderate complexity and focus on understanding relationships, processes, and practical applications.',
+          focus: 'Focus on comprehension, application, and moderate complexity',
+        },
+        advanced: {
+          count: 2,
+          instructions:
+            'Create 2 advanced-level questions that test deep understanding, analysis, and synthesis. Use complex scenarios, require critical thinking, and test higher-order thinking skills.',
+          focus: 'Focus on analysis, synthesis, and complex applications',
+        },
+      };
+
+      const config = difficultyConfig[difficulty];
+
+      const prompt = `Create exactly ${config.count} ${difficulty}-level multiple-choice quiz questions from the following document. 
+
+${config.instructions}
 
 IMPORTANT: Return ONLY a valid JSON array with this exact format, no other text or explanations:
 [{"question":"What is the primary focus?","options":["Option A","Option B","Option C","Option D"],"answer":"Option A"}]
@@ -339,13 +412,7 @@ CRITICAL REQUIREMENTS:
 3. Each option should be a complete, standalone answer
 4. The answer field must match exactly one of the options
 5. Use clear, distinct options that are all plausible
-
-Make the questions comprehensive and cover:
-- Main concepts and definitions
-- Important facts and data
-- Key relationships and connections
-- Critical insights and conclusions
-- Specific examples or applications
+6. ${config.focus}
 
 Document content: ${text.substring(0, 2000)}`;
 
@@ -358,7 +425,7 @@ Document content: ${text.substring(0, 2000)}`;
       ).text();
       const trimmedContent = content.trim();
 
-      console.log('Quizzes raw response:', trimmedContent);
+      console.log(`${difficulty} Quizzes raw response:`, trimmedContent);
 
       try {
         // Try to extract JSON from the response
@@ -407,21 +474,24 @@ Document content: ${text.substring(0, 2000)}`;
         }
         throw new Error('Invalid JSON structure');
       } catch (parseError: unknown) {
-        console.error('JSON parsing error for quizzes:', parseError);
+        console.error(
+          `JSON parsing error for ${difficulty} quizzes:`,
+          parseError,
+        );
         console.log('Failed to parse content:', trimmedContent);
         return [
           {
-            question: 'What is the main topic of this document?',
+            question: `What is the main topic of this document? (${difficulty} level)`,
             options: ['Topic A', 'Topic B', 'Topic C', 'Topic D'],
             answer: 'Topic A',
           },
         ];
       }
     } catch (error) {
-      console.error('Gemini API error in generateQuizzes:', error);
+      console.error(`Gemini API error in generate${difficulty}Quizzes:`, error);
       return [
         {
-          question: 'Quiz generation is temporarily unavailable',
+          question: `${difficulty} quiz generation is temporarily unavailable`,
           options: [
             'Please try again',
             'Contact support',
