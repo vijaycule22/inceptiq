@@ -11,6 +11,7 @@ import * as crypto from 'crypto';
 import { User } from '../entities/user.entity';
 import { PasswordReset } from '../entities/password-reset.entity';
 import { EmailService } from '../services/email.service';
+import { CreditService } from '../services/credit.service';
 import {
   LoginDto,
   RegisterDto,
@@ -28,6 +29,7 @@ export class AuthService {
     private passwordResetRepository: Repository<PasswordReset>,
     private jwtService: JwtService,
     private emailService: EmailService,
+    private creditService: CreditService,
   ) {}
 
   async register(registerDto: RegisterDto): Promise<AuthResponseDto> {
@@ -53,6 +55,15 @@ export class AuthService {
     });
 
     const savedUser = await this.userRepository.save(user);
+
+    // Add welcome bonus credits
+    try {
+      await this.creditService.addWelcomeBonus(savedUser.id);
+      console.log(`✅ Added welcome bonus to new user ${savedUser.id}`);
+    } catch (error) {
+      console.error('Failed to add welcome bonus:', error);
+      // Don't fail registration if credit bonus fails
+    }
 
     // Send welcome email
     try {

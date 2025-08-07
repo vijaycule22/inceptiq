@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { TopicModule } from './topic/topic.module';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { CreditModule } from './credit/credit.module';
 import { AiChatController } from './controllers/ai-chat.controller';
 import { databaseConfig } from './config/database.config';
 
@@ -14,6 +15,7 @@ import { databaseConfig } from './config/database.config';
     AuthModule,
     TopicModule,
     DashboardModule,
+    CreditModule,
   ],
   controllers: [AppController, AiChatController],
   providers: [AppService],

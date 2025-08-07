@@ -135,12 +135,45 @@ export class AppMainComponent implements OnInit, OnDestroy {
     } else if (event.type === 'leaderboard') {
       this.onLeaderboard();
     } else {
+      // Check if the feature is available for this topic
+      const topic = this.topics.find((t) => t.name === event.topic);
+      if (topic && !this.isFeatureAvailable(event.type, topic)) {
+        // Show a message that the feature wasn't generated
+        this.showFeatureNotAvailableMessage(event.type);
+        return;
+      }
+
       this.selectedTopic = event.topic;
       this.selectedPanel = event.type;
       this.showUploadForm = false;
       this.showWelcomeForm = false;
       this.showDashboard = false;
     }
+  }
+
+  isFeatureAvailable(feature: string, topic: Topic): boolean {
+    switch (feature) {
+      case 'summary':
+        return topic.hasSummary;
+      case 'flashcards':
+        return topic.hasFlashcards;
+      case 'quiz':
+        return topic.hasQuiz;
+      default:
+        return true;
+    }
+  }
+
+  showFeatureNotAvailableMessage(feature: string) {
+    const featureName =
+      feature === 'flashcards'
+        ? 'Flashcards'
+        : feature === 'quiz'
+        ? 'Quizzes'
+        : 'Summary';
+    alert(
+      `${featureName} were not generated for this topic. Please upload the document again and select ${featureName} generation.`
+    );
   }
 
   onUploadNewTopic() {

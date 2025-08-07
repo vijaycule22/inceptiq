@@ -8,6 +8,7 @@ import { JwtStrategy } from './jwt.strategy';
 import { User } from '../entities/user.entity';
 import { PasswordReset } from '../entities/password-reset.entity';
 import { EmailService } from '../services/email.service';
+import { CreditModule } from '../credit/credit.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { EmailService } from '../services/email.service';
       secret: process.env.JWT_SECRET || 'your-secret-key',
       signOptions: { expiresIn: '24h' },
     }),
+    CreditModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, EmailService],

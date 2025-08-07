@@ -10,6 +10,7 @@ import {
 import { Topic } from './topic.entity';
 import { PasswordReset } from './password-reset.entity';
 import { UserStats } from './user-stats.entity';
+import { CreditTransaction } from './credit-transaction.entity';
 
 @Entity('users')
 export class User {
@@ -31,6 +32,15 @@ export class User {
   @Column({ default: true })
   isActive: boolean;
 
+  @Column({ default: 0 })
+  creditBalance: number;
+
+  @Column({ default: 0 })
+  totalCreditsEarned: number;
+
+  @Column({ default: 0 })
+  totalCreditsSpent: number;
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -45,4 +55,7 @@ export class User {
 
   @OneToOne(() => UserStats, (userStats) => userStats.user)
   userStats: UserStats;
+
+  @OneToMany(() => CreditTransaction, (transaction) => transaction.user)
+  creditTransactions: CreditTransaction[];
 }

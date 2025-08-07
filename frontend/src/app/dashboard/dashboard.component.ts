@@ -16,6 +16,7 @@ import { QuizPanelComponent } from './quiz-panel/quiz-panel.component';
 import { TopicService, Topic } from '../services/topic.service';
 import { Subscription } from 'rxjs';
 import { GamificationService } from '../services/gamification.service';
+import { CreditService } from '../services/credit.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -55,11 +56,21 @@ export class DashboardComponent implements OnInit, OnDestroy, OnChanges {
   error: string | null = null;
   success: string | null = null;
   isDragOver = false;
+
+  // Generation options
+  generateSummary = true;
+  generateFlashcards = true;
+  generateQuiz = true;
+
+  // Credit tracking
+  creditBalance = 0;
+
   private subscription: Subscription = new Subscription();
 
   constructor(
     private topicService: TopicService,
-    private gamificationService: GamificationService
+    private gamificationService: GamificationService,
+    private creditService: CreditService
   ) {}
 
   ngOnInit() {
@@ -70,6 +81,20 @@ export class DashboardComponent implements OnInit, OnDestroy, OnChanges {
       console.log('Flashcards:', this.flashcards);
       console.log('Quizzes:', this.quiz);
     }
+
+    // Load credit balance
+    this.loadCreditBalance();
+  }
+
+  loadCreditBalance() {
+    this.creditService.getCreditBalance().subscribe({
+      next: (balance) => {
+        this.creditBalance = balance.balance;
+      },
+      error: (err) => {
+        console.error('Error loading credit balance:', err);
+      },
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -230,11 +255,44 @@ export class DashboardComponent implements OnInit, OnDestroy, OnChanges {
 
   uploadAndGenerate() {
     if (!this.topicName.trim() || !this.file) return;
+
+    // Check credit balance before upload
+    const requiredCredits = this.getTotalCreditsRequired();
+    if (requiredCredits > 0) {
+      this.creditService.getCreditBalance().subscribe({
+        next: (balance) => {
+          if (balance.balance < requiredCredits) {
+            this.error = `Insufficient credits. You have ${balance.balance} credits but need ${requiredCredits} credits for the selected options. Please purchase more credits.`;
+            return;
+          }
+          this.performUpload();
+        },
+        error: (err) => {
+          console.error('Error checking credit balance:', err);
+          this.error = 'Unable to check credit balance. Please try again.';
+        },
+      });
+    } else {
+      this.performUpload();
+    }
+  }
+
+  private performUpload() {
     this.loading = true;
     this.error = null;
     this.success = null;
 
-    this.topicService.uploadTopic(this.file).subscribe({
+    // Create form data with generation options
+    const formData = new FormData();
+    if (this.file) {
+      formData.append('file', this.file);
+    }
+    formData.append('topicName', this.topicName);
+    formData.append('generateSummary', this.generateSummary.toString());
+    formData.append('generateFlashcards', this.generateFlashcards.toString());
+    formData.append('generateQuiz', this.generateQuiz.toString());
+
+    this.topicService.uploadTopicWithOptions(formData).subscribe({
       next: (newTopic) => {
         this.topicService.addTopic(newTopic);
 
@@ -242,6 +300,9 @@ export class DashboardComponent implements OnInit, OnDestroy, OnChanges {
         this.gamificationService.addPoints(25, 'Topic uploaded');
         this.gamificationService.addTopic();
         this.gamificationService.updateStreak();
+
+        // Refresh credit balance after successful upload
+        this.creditService.loadCreditBalance();
 
         this.loading = false;
         this.success = 'Topic created successfully!';
@@ -263,21 +324,42 @@ export class DashboardComponent implements OnInit, OnDestroy, OnChanges {
         }, 1000);
       },
       error: (err) => {
-        this.error = err.error?.error || 'Failed to process file.';
+        console.error('Upload error:', err);
+
+        // Handle credit-related errors
+        if (err.error && err.error.includes('Insufficient credits')) {
+          this.error = err.error;
+        } else if (err.error && err.error.error) {
+          this.error = err.error.error;
+        } else {
+          this.error = 'Failed to process file. Please try again.';
+        }
+
         this.loading = false;
       },
     });
   }
 
   cancelUpload() {
-    this.showUploadForm = false;
-    this.topicName = '';
-    this.file = null;
-    this.filePreview = null;
-    this.fileName = '';
-    this.error = null;
-    this.success = null;
-    this.isDragOver = false;
     this.cancelUploadForm.emit();
+  }
+
+  getTotalCreditsRequired(): number {
+    let total = 0;
+    if (this.generateSummary) total += 1; // SUMMARY_GENERATION costs 1 credit
+    if (this.generateFlashcards) total += 1;
+    if (this.generateQuiz) total += 1;
+    return total;
+  }
+
+  hasInsufficientCredits(): boolean {
+    const requiredCredits = this.getTotalCreditsRequired();
+    return this.creditBalance < requiredCredits;
+  }
+
+  getUploadButtonText(): string {
+    if (this.loading) return 'Processing...';
+    if (this.hasInsufficientCredits()) return 'Insufficient Credits';
+    return 'Upload & Generate';
   }
 }

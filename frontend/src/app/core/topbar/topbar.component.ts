@@ -6,6 +6,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { MenuModule } from 'primeng/menu';
 import { FormsModule } from '@angular/forms';
 import { AuthService, User } from '../../services/auth.service';
+import { CreditService, CreditBalance } from '../../services/credit.service';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
@@ -33,14 +34,21 @@ export class TopbarComponent implements OnInit {
     | 'quiz'
     | 'dashboard'
     | 'progress'
-    | 'leaderboard' = 'summary';
+    | 'leaderboard'
+    | 'notes' = 'summary';
   currentUser: User | null = null;
+  creditBalance: CreditBalance | null = null;
   showFallbackAvatar = false;
   profileItems: MenuItem[] = [
     {
       label: 'My Profile',
       icon: 'pi pi-user',
       command: () => this.navigateToProfile(),
+    },
+    {
+      label: 'Credits & Packages',
+      icon: 'pi pi-credit-card',
+      command: () => this.navigateToCredits(),
     },
     {
       label: 'Settings',
@@ -68,10 +76,26 @@ export class TopbarComponent implements OnInit {
     },
   ];
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService, 
+    private creditService: CreditService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.currentUser = this.authService.currentUserValue;
+    this.loadCreditBalance();
+  }
+
+  loadCreditBalance() {
+    this.creditService.creditBalance$.subscribe({
+      next: (balance) => {
+        this.creditBalance = balance;
+      },
+      error: (error) => {
+        console.error('Error loading credit balance:', error);
+      }
+    });
   }
 
   showProfileMenu(event: Event, menu: any) {
@@ -81,6 +105,10 @@ export class TopbarComponent implements OnInit {
   navigateToProfile() {
     // TODO: Implement profile navigation
     console.log('Navigate to profile');
+  }
+
+  navigateToCredits() {
+    this.router.navigate(['/app/credits']);
   }
 
   navigateToSettings() {

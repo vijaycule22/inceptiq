@@ -5,6 +5,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './auth/register/register.component';
 import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
+import { CreditsComponent } from './credits/credits.component';
 
 import { authGuard } from './guards/auth.guard';
 
@@ -15,6 +16,11 @@ export const routes: Routes = [
   { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'reset-password', component: ResetPasswordComponent },
   { path: 'app', component: AppMainComponent, canActivate: [authGuard] },
+  {
+    path: 'app/credits',
+    component: CreditsComponent,
+    canActivate: [authGuard],
+  },
 
   { path: '**', redirectTo: '' },
 ];

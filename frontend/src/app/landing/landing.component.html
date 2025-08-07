@@ -57,6 +57,7 @@
       </div>
       <div class="flex items-center gap-8">
         <a href="#features" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">Features</a>
+        <a href="#pricing" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">Pricing</a>
         <a href="#how-it-works" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">How it Works</a>
         <a routerLink="/login" 
            class="px-6 py-2 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-cyan-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5">
@@ -91,6 +92,7 @@
             Watch Demo
           </button>
         </div>
+        
       </div>
 
       <!-- Hero Image/Animation -->
@@ -275,6 +277,175 @@
     </div>
   </section>
 
+  <!-- Pricing Section -->
+  <section id="pricing" class="px-6 py-16 lg:py-24 bg-gradient-to-br from-gray-50 to-blue-50">
+    <div class="max-w-6xl mx-auto">
+      <div class="text-center mb-16">
+        <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">Simple, Transparent Pricing</h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          Choose the plan that fits your learning needs. Pay only for what you use.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        <!-- Starter Plan -->
+        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300">
+          <div class="text-center mb-6">
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">Starter</h3>
+            <div class="text-4xl font-bold text-blue-600 mb-2">$1.99</div>
+            <p class="text-gray-600">Perfect for light users</p>
+          </div>
+          <div class="space-y-4 mb-8">
+            <div class="flex items-center gap-3">
+              <span class="pi pi-check-circle text-green-500"></span>
+              <span class="text-gray-700">10 Credits</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="pi pi-check-circle text-green-500"></span>
+              <span class="text-gray-700">AI Summaries</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="pi pi-check-circle text-green-500"></span>
+              <span class="text-gray-700">Flashcards</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="pi pi-check-circle text-green-500"></span>
+              <span class="text-gray-700">Quizzes</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="pi pi-check-circle text-green-500"></span>
+              <span class="text-gray-700">AI Study Assistant</span>
+            </div>
+          </div>
+          <button 
+            (click)="selectPlan('starter')"
+            class="w-full py-3 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-colors">
+            Get Started
+          </button>
+        </div>
+
+        <!-- Explorer Plan -->
+        <div class="bg-white rounded-2xl p-8 shadow-xl border-2 border-blue-200 relative transform scale-105">
+          <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+            <span class="bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-4 py-1 rounded-full text-sm font-semibold">Most Popular</span>
+          </div>
+          <div class="text-center mb-6">
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">Explorer</h3>
+            <div class="text-4xl font-bold text-blue-600 mb-2">$4.99</div>
+            <p class="text-gray-600">Great for regular learners</p>
+          </div>
+          <div class="space-y-4 mb-8">
+            <div class="flex items-center gap-3">
+              <span class="pi pi-check-circle text-green-500"></span>
+              <span class="text-gray-700">30 Credits + 5 Bonus</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="pi pi-check-circle text-green-500"></span>
+              <span class="text-gray-700">Everything in Starter</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="pi pi-check-circle text-green-500"></span>
+              <span class="text-gray-700">Priority Support</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="pi pi-check-circle text-green-500"></span>
+              <span class="text-gray-700">Advanced Analytics</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="pi pi-check-circle text-green-500"></span>
+              <span class="text-gray-700">Unlimited Topics</span>
+            </div>
+          </div>
+          <button 
+            (click)="selectPlan('explorer')"
+            class="w-full py-3 bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-cyan-600 transition-all duration-300">
+            Get Started
+          </button>
+        </div>
+
+        <!-- Pro Plan -->
+        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300">
+          <div class="text-center mb-6">
+            <h3 class="text-2xl font-bold text-gray-900 mb-2">Pro</h3>
+            <div class="text-4xl font-bold text-blue-600 mb-2">$9.99</div>
+            <p class="text-gray-600">Ideal for power users</p>
+          </div>
+          <div class="space-y-4 mb-8">
+            <div class="flex items-center gap-3">
+              <span class="pi pi-check-circle text-green-500"></span>
+              <span class="text-gray-700">100 Credits + 20 Bonus</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="pi pi-check-circle text-green-500"></span>
+              <span class="text-gray-700">Everything in Explorer</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="pi pi-check-circle text-green-500"></span>
+              <span class="text-gray-700">API Access</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="pi pi-check-circle text-green-500"></span>
+              <span class="text-gray-700">Custom Integrations</span>
+            </div>
+            <div class="flex items-center gap-3">
+              <span class="pi pi-check-circle text-green-500"></span>
+              <span class="text-gray-700">Dedicated Support</span>
+            </div>
+          </div>
+          <button 
+            (click)="selectPlan('pro')"
+            class="w-full py-3 bg-gray-100 text-gray-700 font-semibold rounded-lg hover:bg-gray-200 transition-colors">
+            Get Started
+          </button>
+        </div>
+      </div>
+
+      <!-- Credit System Explanation -->
+      <div class="mt-16 bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
+        <div class="text-center mb-8">
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">How Our Credit System Works</h3>
+          <p class="text-gray-600 max-w-2xl mx-auto">
+            Our credit-based system ensures you only pay for what you use. Each AI-powered feature costs a specific number of credits.
+          </p>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="text-center p-4 bg-blue-50 rounded-xl">
+            <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-3">
+              <span class="pi pi-file text-white text-xl"></span>
+            </div>
+            <h4 class="font-semibold text-gray-900 mb-2">AI Summaries</h4>
+            <p class="text-2xl font-bold text-blue-600">1 Credit</p>
+            <p class="text-sm text-gray-600 mt-1">Per document</p>
+          </div>
+          <div class="text-center p-4 bg-cyan-50 rounded-xl">
+            <div class="w-12 h-12 bg-cyan-500 rounded-full flex items-center justify-center mx-auto mb-3">
+              <span class="pi pi-lightbulb text-white text-xl"></span>
+            </div>
+            <h4 class="font-semibold text-gray-900 mb-2">Flashcards</h4>
+            <p class="text-2xl font-bold text-cyan-600">1 Credit</p>
+            <p class="text-sm text-gray-600 mt-1">Per document</p>
+          </div>
+          <div class="text-center p-4 bg-purple-50 rounded-xl">
+            <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-3">
+              <span class="pi pi-question-circle text-white text-xl"></span>
+            </div>
+            <h4 class="font-semibold text-gray-900 mb-2">Quizzes</h4>
+            <p class="text-2xl font-bold text-purple-600">1 Credit</p>
+            <p class="text-sm text-gray-600 mt-1">Per document</p>
+          </div>
+          <div class="text-center p-4 bg-emerald-50 rounded-xl">
+            <div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-3">
+              <span class="pi pi-comments text-white text-xl"></span>
+            </div>
+            <h4 class="font-semibold text-gray-900 mb-2">AI Assistant</h4>
+            <p class="text-2xl font-bold text-emerald-600">2 Credits</p>
+            <p class="text-sm text-gray-600 mt-1">Per session</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- How It Works Section -->
   <section id="how-it-works" class="px-6 py-16 lg:py-24">
     <div class="max-w-5xl mx-auto">
@@ -369,13 +540,39 @@
       <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
         Join thousands of learners who are already accelerating their knowledge acquisition with AI-powered tools.
       </p>
+      
+      <!-- Value Proposition Cards -->
+      <div class="grid md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+          <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="pi pi-gift text-green-600 text-xl"></span>
+          </div>
+          <h3 class="font-bold text-gray-900 mb-2">Free Welcome Bonus</h3>
+          <p class="text-sm text-gray-600">Get 5 free credits to start your learning journey</p>
+        </div>
+        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+          <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="pi pi-dollar text-blue-600 text-xl"></span>
+          </div>
+          <h3 class="font-bold text-gray-900 mb-2">Pay Per Use</h3>
+          <p class="text-sm text-gray-600">Only pay for the AI features you actually use</p>
+        </div>
+        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+          <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <span class="pi pi-rocket text-purple-600 text-xl"></span>
+          </div>
+          <h3 class="font-bold text-gray-900 mb-2">Instant Results</h3>
+          <p class="text-sm text-gray-600">Get AI-powered learning materials in seconds</p>
+        </div>
+      </div>
+      
       <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
         <button 
           (click)="getStarted()"
           class="px-10 py-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-xl font-bold rounded-xl hover:from-blue-700 hover:to-cyan-600 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105">
-          Start Your Free Trial
+          Start Learning Now
         </button>
-        <p class="text-sm text-gray-500">No credit card required • 14-day free trial</p>
+        <p class="text-sm text-gray-500">Free welcome bonus • No credit card required</p>
       </div>
     </div>
   </section>
@@ -395,8 +592,9 @@
         <div>
           <h4 class="font-semibold mb-4">Product</h4>
           <ul class="space-y-2 text-gray-400">
-            <li><a href="#" class="hover:text-white transition-colors">Features</a></li>
-            <li><a href="#" class="hover:text-white transition-colors">Pricing</a></li>
+            <li><a href="#features" class="hover:text-white transition-colors">Features</a></li>
+            <li><a href="#pricing" class="hover:text-white transition-colors">Pricing</a></li>
+            <li><a href="#" class="hover:text-white transition-colors">Credit System</a></li>
             <li><a href="#" class="hover:text-white transition-colors">API</a></li>
           </ul>
         </div>

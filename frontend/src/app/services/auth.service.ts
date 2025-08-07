@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { CreditService } from './credit.service';
 
 export interface User {
   id: number;
@@ -45,7 +46,10 @@ export class AuthService {
   public currentUser: Observable<User | null>;
   private apiUrl = 'http://localhost:3000';
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private creditService: CreditService
+  ) {
     this.currentUserSubject = new BehaviorSubject<User | null>(
       this.getUserFromStorage()
     );
@@ -75,6 +79,10 @@ export class AuthService {
           }
 
           this.currentUserSubject.next(response.user);
+          
+          // Refresh credit balance after login
+          this.creditService.loadCreditBalance();
+          
           return response;
         })
       );
@@ -89,6 +97,10 @@ export class AuthService {
           localStorage.setItem('accessToken', response.accessToken);
           localStorage.setItem('currentUser', JSON.stringify(response.user));
           this.currentUserSubject.next(response.user);
+          
+          // Refresh credit balance after registration
+          this.creditService.loadCreditBalance();
+          
           return response;
         })
       );

@@ -1,0 +1,223 @@
+<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50 relative overflow-hidden">
+  
+  <!-- Floating Educational Elements -->
+  <div class="absolute inset-0 overflow-hidden pointer-events-none">
+    <div class="absolute top-20 left-10 w-16 h-16 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full opacity-20 animate-float-slow"></div>
+    <div class="absolute top-40 right-20 w-12 h-12 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full opacity-15 animate-float-medium"></div>
+    <div class="absolute top-60 left-1/4 w-8 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full opacity-25 animate-float-fast"></div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="relative z-10 p-6">
+    <div class="max-w-7xl mx-auto">
+      
+      <!-- Header Section -->
+      <div class="bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/20 mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-2xl flex items-center justify-center shadow-lg">
+              <span class="pi pi-credit-card text-2xl text-white"></span>
+            </div>
+            <div>
+              <h1 class="text-3xl font-bold text-gray-900">Credits & Packages</h1>
+              <p class="text-gray-600">Choose the perfect plan for your learning journey</p>
+            </div>
+          </div>
+          
+          <!-- Current Balance -->
+          <div class="bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-2xl p-4 shadow-lg">
+            <div class="text-center">
+              <div class="text-sm text-green-100">Current Balance</div>
+              <div class="text-2xl font-bold">{{ formatCredits(creditBalance.balance) }}</div>
+              <div class="text-xs text-green-100">credits</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Credit Stats -->
+        <div class="grid grid-cols-3 gap-4">
+          <div class="bg-blue-50 rounded-xl p-4 text-center">
+            <div class="text-2xl font-bold text-blue-600">{{ formatCredits(creditBalance.earned) }}</div>
+            <div class="text-sm text-blue-600">Total Earned</div>
+          </div>
+          <div class="bg-purple-50 rounded-xl p-4 text-center">
+            <div class="text-2xl font-bold text-purple-600">{{ formatCredits(creditBalance.spent) }}</div>
+            <div class="text-sm text-purple-600">Total Spent</div>
+          </div>
+          <div class="bg-green-50 rounded-xl p-4 text-center">
+            <div class="text-2xl font-bold text-green-600">{{ formatCredits(creditBalance.balance) }}</div>
+            <div class="text-sm text-green-600">Available</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Credit Packages -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div *ngFor="let pkg of packages" 
+             class="bg-white/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 overflow-hidden hover:shadow-3xl transition-all duration-300"
+             [class.ring-4]="pkg.isPopular"
+             [class.ring-green-500]="pkg.isPopular">
+          
+          <!-- Package Header -->
+          <div class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white p-6 relative">
+            <div *ngIf="pkg.isPopular" class="absolute -top-2 -right-2 bg-green-500 text-white text-xs px-3 py-1 rounded-full font-bold">
+              POPULAR
+            </div>
+            <h3 class="text-xl font-bold mb-2">{{ pkg.name }}</h3>
+            <p class="text-blue-100 text-sm">{{ pkg.description }}</p>
+          </div>
+
+          <!-- Package Content -->
+          <div class="p-6">
+            <!-- Credits -->
+            <div class="text-center mb-4">
+              <div class="text-3xl font-bold text-gray-900">{{ formatCredits(getTotalCredits(pkg)) }}</div>
+              <div class="text-sm text-gray-600">Total Credits</div>
+              <div *ngIf="pkg.bonusCredits > 0" class="text-xs text-green-600 mt-1">
+                +{{ pkg.bonusCredits }} bonus credits
+              </div>
+            </div>
+
+            <!-- Price -->
+            <div class="text-center mb-4">
+              <div class="text-2xl font-bold text-gray-900">{{ formatPrice(pkg.price) }}</div>
+              <div class="text-xs text-gray-500">₹{{ getCostPerCredit(pkg).toFixed(2) }} per credit</div>
+            </div>
+
+            <!-- Savings -->
+            <div *ngIf="getSavings(pkg) > 0" class="text-center mb-4">
+              <div class="text-sm text-green-600 font-semibold">
+                Save {{ getSavings(pkg).toFixed(0) }}%
+              </div>
+            </div>
+
+            <!-- Purchase Button -->
+            <button 
+              (click)="selectPackage(pkg)"
+              class="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white py-3 px-4 rounded-xl font-semibold hover:shadow-lg transition-all duration-300">
+              Purchase Now
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Credit Usage Information -->
+      <div class="bg-white/80 backdrop-blur-sm rounded-3xl p-6 shadow-2xl border border-white/20">
+        <h2 class="text-xl font-bold text-gray-900 mb-4">How Credits Work</h2>
+        <div class="grid md:grid-cols-2 gap-6">
+          <div>
+            <h3 class="font-semibold text-gray-900 mb-3">Credit Consumption</h3>
+            <div class="space-y-2">
+              <div class="flex justify-between items-center">
+                <span class="text-gray-600">PDF Upload + Summary</span>
+                <span class="font-semibold text-gray-900">2 credits</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-600">Flashcard Generation</span>
+                <span class="font-semibold text-gray-900">1 credit</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-600">Quiz Generation</span>
+                <span class="font-semibold text-gray-900">1 credit</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-600">AI Chat Session</span>
+                <span class="font-semibold text-gray-900">2 credits</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-600">Image Upload (OCR)</span>
+                <span class="font-semibold text-gray-900">2 credits</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h3 class="font-semibold text-gray-900 mb-3">Benefits</h3>
+            <ul class="space-y-2 text-gray-600">
+              <li class="flex items-center gap-2">
+                <span class="pi pi-check text-green-500"></span>
+                Pay only for what you use
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="pi pi-check text-green-500"></span>
+                No monthly subscriptions
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="pi pi-check text-green-500"></span>
+                Credits never expire
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="pi pi-check text-green-500"></span>
+                Bonus credits on larger packages
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="pi pi-check text-green-500"></span>
+                Instant credit delivery
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Purchase Modal -->
+  <div *ngIf="showPurchaseModal" 
+       class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl w-full max-w-md">
+      <div class="bg-gradient-to-r from-green-500 to-emerald-500 text-white p-6 rounded-t-3xl">
+        <h2 class="text-2xl font-bold">Purchase Credits</h2>
+      </div>
+      
+      <div class="p-6" *ngIf="selectedPackage">
+        <div class="text-center mb-6">
+          <h3 class="text-xl font-bold text-gray-900 mb-2">{{ selectedPackage.name }} Package</h3>
+          <div class="text-3xl font-bold text-green-600 mb-2">{{ formatPrice(selectedPackage.price) }}</div>
+          <div class="text-gray-600">
+            {{ formatCredits(getTotalCredits(selectedPackage)) }} credits
+            <span *ngIf="selectedPackage.bonusCredits > 0" class="text-green-600">
+              (+{{ selectedPackage.bonusCredits }} bonus)
+            </span>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <div class="bg-gray-50 rounded-xl p-4">
+            <div class="flex justify-between items-center">
+              <span class="text-gray-600">Base Credits</span>
+              <span class="font-semibold">{{ formatCredits(selectedPackage.credits) }}</span>
+            </div>
+            <div *ngIf="selectedPackage.bonusCredits > 0" class="flex justify-between items-center mt-2">
+              <span class="text-gray-600">Bonus Credits</span>
+              <span class="font-semibold text-green-600">+{{ formatCredits(selectedPackage.bonusCredits) }}</span>
+            </div>
+            <div class="border-t border-gray-200 mt-2 pt-2">
+              <div class="flex justify-between items-center">
+                <span class="font-semibold text-gray-900">Total Credits</span>
+                <span class="font-bold text-lg text-gray-900">{{ formatCredits(getTotalCredits(selectedPackage)) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center text-sm text-gray-600">
+            Cost per credit: ₹{{ getCostPerCredit(selectedPackage).toFixed(2) }}
+          </div>
+        </div>
+      </div>
+
+      <div class="p-6 border-t border-gray-200 flex items-center justify-end gap-3">
+        <button 
+          (click)="closePurchaseModal()"
+          class="px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors">
+          Cancel
+        </button>
+        <button 
+          (click)="purchaseCredits()"
+          [disabled]="isLoading"
+          class="px-6 py-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-lg hover:shadow-lg transition-all duration-300 disabled:opacity-60">
+          <span *ngIf="isLoading" class="pi pi-spin pi-spinner mr-2"></span>
+          {{ isLoading ? 'Processing...' : 'Purchase Now' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div> 

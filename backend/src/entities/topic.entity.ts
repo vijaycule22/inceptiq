@@ -29,6 +29,16 @@ export class Topic {
   @Column()
   userId: number;
 
+  // Track what was generated
+  @Column({ default: true })
+  hasSummary: boolean;
+
+  @Column({ default: true })
+  hasFlashcards: boolean;
+
+  @Column({ default: true })
+  hasQuiz: boolean;
+
   @ManyToOne(() => User, (user) => user.topics)
   @JoinColumn({ name: 'userId' })
   user: User;

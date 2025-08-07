@@ -8,6 +8,7 @@ import { UserStats } from '../entities/user-stats.entity';
 import { Achievement } from '../entities/achievement.entity';
 import { StudySession } from '../entities/study-session.entity';
 import { DashboardService } from '../services/dashboard.service';
+import { CreditModule } from '../credit/credit.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { DashboardService } from '../services/dashboard.service';
       Achievement,
       StudySession,
     ]),
+    CreditModule,
   ],
   controllers: [TopicController],
   providers: [TopicService, DashboardService],

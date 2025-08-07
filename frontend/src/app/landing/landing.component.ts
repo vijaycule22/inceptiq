@@ -16,4 +16,11 @@ export class LandingComponent {
     // Navigate to login page
     this.router.navigate(['/login']);
   }
+
+  selectPlan(plan: string) {
+    // Navigate to registration page with plan selection
+    this.router.navigate(['/register'], { 
+      queryParams: { plan: plan.toLowerCase() } 
+    });
+  }
 }

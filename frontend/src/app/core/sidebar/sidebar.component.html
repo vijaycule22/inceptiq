@@ -19,12 +19,12 @@
   <div class="px-4 py-2 border-b border-gray-200/50">
     <button 
             class="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium rounded-xl transition-all duration-300 group"
-            [ngClass]="isLeaderboardActive() ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-lg' : 'text-gray-700 hover:bg-white/80 hover:text-yellow-600 hover:shadow-md'" 
+            [ngClass]="isLeaderboardActive() ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg' : 'text-gray-700 hover:bg-white/80 hover:text-blue-600 hover:shadow-md'" 
             (click)="onLeaderboard()">
       <div class="w-5 h-5 rounded-lg flex items-center justify-center transition-colors"
-           [ngClass]="isLeaderboardActive() ? 'bg-white/20' : 'bg-yellow-100 group-hover:bg-yellow-200'">
+           [ngClass]="isLeaderboardActive() ? 'bg-white/20' : 'bg-green-100 group-hover:bg-green-200'">
         <span class="text-sm transition-colors"
-              [ngClass]="isLeaderboardActive() ? 'text-white' : 'text-yellow-600 group-hover:text-yellow-700'">🏆</span>
+              [ngClass]="isLeaderboardActive() ? 'text-white' : 'text-green-600 group-hover:text-green-700'">🏆</span>
       </div>
       <span>Leaderboard</span>
     </button>
@@ -62,6 +62,7 @@
         
         <!-- Content -->
         <ul class="py-2">
+          <!-- Summary Link -->
           <li class="mx-2 mb-2 rounded-lg overflow-hidden menu-item"
               [ngClass]="{'active-item': isActiveMenu('summary', topic.name)}">
             <div class="flex items-center gap-3 px-4 py-2 ml-2 rounded-lg transition-all duration-300 cursor-pointer group"
@@ -78,34 +79,52 @@
                    [ngClass]="isActiveMenu('summary', topic.name) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'"></div>
             </div>
           </li>
+          
+          <!-- Flashcards Link -->
           <li class="mx-2 mb-2 rounded-lg overflow-hidden menu-item"
-              [ngClass]="{'active-item': isActiveMenu('flashcards', topic.name)}">
-            <div class="flex items-center gap-3 px-4 py-2 ml-2 rounded-lg transition-all duration-300 cursor-pointer group"
-                 [ngClass]="isActiveMenu('flashcards', topic.name) ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-md' : 'hover:bg-white/80 hover:text-cyan-600 hover:shadow-sm'"
-                 (click)="onSelect('flashcards', topic.name)">
+              [ngClass]="{'active-item': isActiveMenu('flashcards', topic.name), 'disabled-item': !topic.hasFlashcards}">
+            <div class="flex items-center gap-3 px-4 py-2 ml-2 rounded-lg transition-all duration-300"
+                 [ngClass]="isActiveMenu('flashcards', topic.name) ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-md' : 
+                            !topic.hasFlashcards ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'hover:bg-white/80 hover:text-cyan-600 hover:shadow-sm cursor-pointer'"
+                 (click)="topic.hasFlashcards ? onSelect('flashcards', topic.name) : null">
               <div class="w-6 h-6 rounded-lg flex items-center justify-center transition-colors"
-                   [ngClass]="isActiveMenu('flashcards', topic.name) ? 'bg-white/20' : 'bg-cyan-100 group-hover:bg-cyan-200'">
+                   [ngClass]="isActiveMenu('flashcards', topic.name) ? 'bg-white/20' : 
+                              !topic.hasFlashcards ? 'bg-gray-200' : 'bg-cyan-100 group-hover:bg-cyan-200'">
                 <span class="pi pi-lightbulb text-sm transition-colors"
-                      [ngClass]="isActiveMenu('flashcards', topic.name) ? 'text-white' : 'text-cyan-600'"></span>
+                      [ngClass]="isActiveMenu('flashcards', topic.name) ? 'text-white' : 
+                                !topic.hasFlashcards ? 'text-gray-400' : 'text-cyan-600'"></span>
               </div>
               <span class="text-xs font-medium transition-colors"
-                    [ngClass]="isActiveMenu('flashcards', topic.name) ? 'text-white' : 'text-gray-700 group-hover:text-cyan-600'">Flashcards</span>
+                    [ngClass]="isActiveMenu('flashcards', topic.name) ? 'text-white' : 
+                              !topic.hasFlashcards ? 'text-gray-400' : 'text-gray-700 group-hover:text-cyan-600'">
+                Flashcards
+                <span *ngIf="!topic.hasFlashcards" class="text-xs text-gray-400 ml-1">(Not Generated)</span>
+              </span>
               <div class="ml-auto w-2 h-2 bg-white rounded-full transition-opacity"
                    [ngClass]="isActiveMenu('flashcards', topic.name) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'"></div>
             </div>
           </li>
+          
+          <!-- Quiz Link -->
           <li class="mx-2 mb-2 rounded-lg overflow-hidden menu-item"
-              [ngClass]="{'active-item': isActiveMenu('quiz', topic.name)}">
-            <div class="flex items-center gap-3 px-4 py-2 ml-2 rounded-lg transition-all duration-300 cursor-pointer group"
-                 [ngClass]="isActiveMenu('quiz', topic.name) ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md' : 'hover:bg-white/80 hover:text-purple-600 hover:shadow-sm'"
-                 (click)="onSelect('quiz', topic.name)">
+              [ngClass]="{'active-item': isActiveMenu('quiz', topic.name), 'disabled-item': !topic.hasQuiz}">
+            <div class="flex items-center gap-3 px-4 py-2 ml-2 rounded-lg transition-all duration-300"
+                 [ngClass]="isActiveMenu('quiz', topic.name) ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white shadow-md' : 
+                            !topic.hasQuiz ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'hover:bg-white/80 hover:text-purple-600 hover:shadow-sm cursor-pointer'"
+                 (click)="topic.hasQuiz ? onSelect('quiz', topic.name) : null">
               <div class="w-6 h-6 rounded-lg flex items-center justify-center transition-colors"
-                   [ngClass]="isActiveMenu('quiz', topic.name) ? 'bg-white/20' : 'bg-purple-100 group-hover:bg-purple-200'">
+                   [ngClass]="isActiveMenu('quiz', topic.name) ? 'bg-white/20' : 
+                              !topic.hasQuiz ? 'bg-gray-200' : 'bg-purple-100 group-hover:bg-purple-200'">
                 <span class="pi pi-question-circle text-sm transition-colors"
-                      [ngClass]="isActiveMenu('quiz', topic.name) ? 'text-white' : 'text-purple-600'"></span>
+                      [ngClass]="isActiveMenu('quiz', topic.name) ? 'text-white' : 
+                                !topic.hasQuiz ? 'text-gray-400' : 'text-purple-600'"></span>
               </div>
               <span class="text-xs font-medium transition-colors"
-                    [ngClass]="isActiveMenu('quiz', topic.name) ? 'text-white' : 'text-gray-700 group-hover:text-purple-600'">Quizzes</span>
+                    [ngClass]="isActiveMenu('quiz', topic.name) ? 'text-white' : 
+                              !topic.hasQuiz ? 'text-gray-400' : 'text-gray-700 group-hover:text-purple-600'">
+                Quizzes
+                <span *ngIf="!topic.hasQuiz" class="text-xs text-gray-400 ml-1">(Not Generated)</span>
+              </span>
               <div class="ml-auto w-2 h-2 bg-white rounded-full transition-opacity"
                    [ngClass]="isActiveMenu('quiz', topic.name) ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'"></div>
             </div>

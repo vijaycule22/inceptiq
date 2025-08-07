@@ -10,6 +10,9 @@ export interface Topic {
   flashcards: any[];
   quiz: any[];
   createdAt: string;
+  hasSummary: boolean;
+  hasFlashcards: boolean;
+  hasQuiz: boolean;
 }
 
 @Injectable({
@@ -24,6 +27,10 @@ export class TopicService {
 
   private getHeaders(): HttpHeaders {
     const token = this.authService.token;
+    console.log(
+      'TopicService: Getting headers with token:',
+      token ? 'Token exists' : 'No token'
+    );
     return new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
@@ -36,6 +43,16 @@ export class TopicService {
     return this.http.post<Topic>(`${this.apiUrl}/api/topics/upload`, formData, {
       headers: this.getHeaders(),
     });
+  }
+
+  uploadTopicWithOptions(formData: FormData): Observable<Topic> {
+    return this.http.post<Topic>(
+      `${this.apiUrl}/api/topics/upload-with-options`,
+      formData,
+      {
+        headers: this.getHeaders(),
+      }
+    );
   }
 
   getTopics(): Observable<Topic[]> {
@@ -57,12 +74,14 @@ export class TopicService {
   }
 
   loadTopics() {
+    console.log('TopicService: Loading topics...');
     this.getTopics().subscribe({
       next: (topics) => {
+        console.log('TopicService: Received topics from API:', topics);
         this.topicsSubject.next(topics);
       },
       error: (error) => {
-        console.error('Error loading topics:', error);
+        console.error('TopicService: Error loading topics:', error);
         this.topicsSubject.next([]);
       },
     });

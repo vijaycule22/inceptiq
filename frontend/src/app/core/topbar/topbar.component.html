@@ -26,6 +26,17 @@
 
     <!-- Right: User Profile and Actions -->
     <div class="flex items-center gap-4">
+      <!-- Credit Balance -->
+      <div class="bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-xl px-4 py-2 shadow-lg">
+        <div class="flex items-center gap-2">
+          <span class="pi pi-credit-card text-sm"></span>
+          <div class="text-center">
+            <div class="text-sm font-semibold">{{ creditBalance?.balance || 0 }}</div>
+            <div class="text-xs opacity-90">credits</div>
+          </div>
+        </div>
+      </div>
+      
       <!-- Progress Indicator -->
       <app-progress-indicator></app-progress-indicator>
       

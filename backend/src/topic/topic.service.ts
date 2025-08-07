@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import * as pdfParse from 'pdf-parse';
 import { GoogleGenerativeAI } from '@google/generative-ai';
+import * as pdfParse from 'pdf-parse';
 import * as dotenv from 'dotenv';
 import { Topic } from '../entities/topic.entity';
 import { User } from '../entities/user.entity';
 import { DashboardService } from '../services/dashboard.service';
+import { CreditService } from '../services/credit.service';
+import { ActionType } from '../entities/credit-transaction.entity';
 
 dotenv.config();
 
@@ -21,6 +23,7 @@ export class TopicService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private dashboardService: DashboardService,
+    private creditService: CreditService,
   ) {
     this.genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
     this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
@@ -54,6 +57,19 @@ export class TopicService {
         throw new Error(`User not found for userId: ${userId}`);
       }
 
+      // Check if user has enough credits for PDF upload
+      const hasCredits = await this.creditService.consumeCredits(
+        userId,
+        ActionType.PDF_UPLOAD,
+        `PDF upload: ${name}`,
+      );
+
+      if (!hasCredits) {
+        throw new Error(
+          'Insufficient credits for PDF upload. Please purchase more credits.',
+        );
+      }
+
       console.log('Creating topic for valid user:', userId);
 
       // Process the PDF
@@ -69,6 +85,9 @@ export class TopicService {
         flashcards: JSON.stringify(flashcards),
         quiz: JSON.stringify(quizzes),
         userId,
+        hasSummary: true,
+        hasFlashcards: true,
+        hasQuiz: true,
       });
 
       const savedTopic = await this.topicRepository.save(topic);
@@ -113,30 +132,181 @@ export class TopicService {
         console.error('Error recording study session:', sessionError);
         console.error('Session error details:', {
           userId,
-          userIdType: typeof userId,
+          type: typeof userId,
+          name,
           topicId: savedTopic.id,
-          topicName: name,
         });
-
-        // Don't fail the entire topic creation if just the session recording fails
-        // but log the error for debugging
-        console.warn(
-          'Topic created but study session recording failed. Topic ID:',
-          savedTopic.id,
-        );
+        // Don't throw here, just log the error
       }
 
       return savedTopic;
     } catch (error) {
-      console.error('Error creating topic:', error);
-      console.error('Error details:', {
+      console.error('Error in createTopic:', error);
+      throw error;
+    }
+  }
+
+  async createTopicWithOptions(
+    userId: number,
+    name: string,
+    buffer: Buffer,
+    options: {
+      generateSummary: boolean;
+      generateFlashcards: boolean;
+      generateQuiz: boolean;
+    },
+  ): Promise<Topic> {
+    try {
+      // Enhanced validation for userId
+      if (
+        !userId ||
+        typeof userId !== 'number' ||
+        isNaN(userId) ||
+        userId <= 0
+      ) {
+        console.error(
+          'Invalid userId passed to createTopicWithOptions:',
+          userId,
+          typeof userId,
+        );
+        throw new Error(
+          `Invalid userId passed to createTopicWithOptions: ${userId}`,
+        );
+      }
+
+      // Verify user exists in database
+      const user = await this.userRepository.findOne({ where: { id: userId } });
+      if (!user) {
+        console.error('User not found in database for userId:', userId);
+        throw new Error(`User not found for userId: ${userId}`);
+      }
+
+      // Calculate total credits needed
+      let totalCredits = 0;
+      if (options.generateSummary) totalCredits += 1; // SUMMARY_GENERATION costs 1 credit
+      if (options.generateFlashcards) totalCredits += 1;
+      if (options.generateQuiz) totalCredits += 1;
+
+      // Check if user has enough credits
+      if (totalCredits > 0) {
+        const user = await this.userRepository.findOne({
+          where: { id: userId },
+        });
+        if (!user) {
+          throw new Error('User not found');
+        }
+
+        if (user.creditBalance < totalCredits) {
+          throw new Error(
+            `Insufficient credits. You have ${user.creditBalance} credits but need ${totalCredits} credits for the selected options. Please purchase more credits.`,
+          );
+        }
+
+        // Consume credits for each selected option
+        if (options.generateSummary) {
+          const hasCredits = await this.creditService.consumeCredits(
+            userId,
+            ActionType.SUMMARY_GENERATION,
+            `Summary generation for: ${name}`,
+          );
+          if (!hasCredits) {
+            throw new Error('Failed to consume credits for summary generation');
+          }
+        }
+
+        if (options.generateFlashcards) {
+          const hasCredits = await this.creditService.consumeCredits(
+            userId,
+            ActionType.FLASHCARD_GENERATION,
+            `Flashcard generation for: ${name}`,
+          );
+          if (!hasCredits) {
+            throw new Error(
+              'Failed to consume credits for flashcard generation',
+            );
+          }
+        }
+
+        if (options.generateQuiz) {
+          const hasCredits = await this.creditService.consumeCredits(
+            userId,
+            ActionType.QUIZ_GENERATION,
+            `Quiz generation for: ${name}`,
+          );
+          if (!hasCredits) {
+            throw new Error('Failed to consume credits for quiz generation');
+          }
+        }
+      }
+
+      console.log(
+        'Creating topic with options for valid user:',
         userId,
-        userIdType: typeof userId,
-        name,
-        errorMessage: error.message,
-        errorStack: error.stack,
-      });
-      throw new Error('Failed to create topic. Please try again later.');
+        'options:',
+        options,
+      );
+
+      // Extract text from PDF
+      const text = await this.extractTextFromPdf(buffer);
+
+      // Generate content based on options
+      let summary = '';
+      let flashcards: any[] = [];
+      let quizzes: any[] = [];
+
+      if (options.generateSummary) {
+        summary = await this.generateSummary(text);
+      }
+
+      if (options.generateFlashcards) {
+        flashcards = await this.generateFlashcards(text);
+      }
+
+      if (options.generateQuiz) {
+        quizzes = await this.generateQuizzes(text);
+      }
+
+      // Create and save the topic
+      const topic = new Topic();
+      topic.name = name;
+      topic.summary = summary ? JSON.stringify(summary) : '';
+      topic.flashcards =
+        flashcards.length > 0 ? JSON.stringify(flashcards) : '';
+      topic.quiz = quizzes.length > 0 ? JSON.stringify(quizzes) : '';
+      topic.userId = userId;
+
+      // Set generation flags
+      topic.hasSummary = options.generateSummary;
+      topic.hasFlashcards = options.generateFlashcards;
+      topic.hasQuiz = options.generateQuiz;
+
+      const savedTopic = await this.topicRepository.save(topic);
+      console.log(
+        'Topic saved successfully with options:',
+        savedTopic.id,
+        'for userId:',
+        userId,
+      );
+
+      // Record the upload session in dashboard
+      try {
+        await this.dashboardService.recordStudySession(
+          userId,
+          'upload',
+          name,
+          0, // No duration for upload
+          25, // Points for uploading a topic
+          { topicId: savedTopic.id },
+        );
+        console.log('Study session recorded successfully for userId:', userId);
+      } catch (sessionError) {
+        console.error('Error recording study session:', sessionError);
+      }
+
+      return savedTopic;
+    } catch (error) {
+      console.error('Error in createTopicWithOptions:', error);
+      throw error;
     }
   }
 
@@ -206,6 +376,17 @@ export class TopicService {
     } catch (error) {
       console.error('Error processing PDF:', error);
       throw new Error('Failed to process PDF. Please try again later.');
+    }
+  }
+
+  private async extractTextFromPdf(buffer: Buffer): Promise<string> {
+    try {
+      const pdfParse = require('pdf-parse');
+      const data = await pdfParse(buffer);
+      return data.text;
+    } catch (error) {
+      console.error('Error extracting text from PDF:', error);
+      throw new Error('Failed to extract text from PDF');
     }
   }
 
