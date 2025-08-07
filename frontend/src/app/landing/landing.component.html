@@ -71,24 +71,24 @@
   <div class="relative z-10 text-center max-w-6xl mx-auto px-4 py-16">
     <div class="max-w-6xl mx-auto">
       <div class="text-center mb-16">
-        <div class="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-xs font-medium mb-6">
+        <div class="inline-flex items-center gap-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-xs font-medium mb-6 animate-fade-in-up">
           <span class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></span>
           AI-Powered Learning Platform
         </div>
-        <h1 class="text-4xl max-w-4xl mx-auto lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+        <h1 class="text-4xl max-w-4xl mx-auto lg:text-6xl font-bold text-gray-900 mb-6 leading-tight animate-fade-in-up stagger-1">
           Transform Documents into
-          <span class="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">Interactive Learning</span>
+          <span class="bg-gradient-to-r from-blue-600 via-cyan-500 to-purple-600 bg-clip-text text-transparent animate-pulse-slow">Interactive Learning</span>
         </h1>
-        <p class="text-md lg:text-xl text-gray-600 mb-8 leading-relaxed max-w-4xl mx-auto">
+        <p class="text-md lg:text-xl text-gray-600 mb-8 leading-relaxed max-w-4xl mx-auto animate-fade-in-up stagger-2">
           Upload any document and watch AI create personalized summaries, flashcards, and quizzes to accelerate your learning journey.
         </p>
-        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up stagger-3">
           <button 
             (click)="getStarted()"
-            class="px-6 py-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-md font-bold rounded-xl hover:from-blue-700 hover:to-cyan-600 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105">
+            class="px-6 py-4 bg-gradient-to-r from-blue-600 to-cyan-500 text-white text-md font-bold rounded-xl hover:from-blue-700 hover:to-cyan-600 transition-all duration-300 shadow-xl hover:shadow-2xl transform hover:-translate-y-1 hover:scale-105 animate-pulse-glow">
             Start Learning Now
           </button>
-          <button class="px-6 py-4 border-2 border-gray-300 text-gray-700 text-md font-semibold rounded-xl hover:border-gray-400 hover:bg-gray-50 transition-all duration-300">
+          <button class="px-6 py-4 border-2 border-gray-300 text-gray-700 text-md font-semibold rounded-xl hover:border-gray-400 hover:bg-gray-50 transition-all duration-300 hover-lift">
             Watch Demo
           </button>
         </div>
@@ -105,7 +105,7 @@
         </div>
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 justify-center">
           <!-- Smart Summaries Card -->
-          <div class="bg-white gap-2 rounded-2xl p-7 text-gray-900 relative overflow-hidden group shadow-2xl border border-blue-100 hover:shadow-blue-200 transition-all duration-300 hover:-translate-y-2 hover:scale-105 min-h-[300px] flex flex-col justify-between w-full max-w-[380px] md:max-w-[420px] mx-auto">
+          <div class="bg-white gap-2 rounded-2xl p-7 text-gray-900 relative overflow-hidden group shadow-2xl border border-blue-100 hover:shadow-blue-200 transition-all duration-300 hover:-translate-y-2 hover:scale-105 min-h-[300px] flex flex-col justify-between w-full max-w-[380px] md:max-w-[420px] mx-auto animate-scale-in stagger-1">
             <div>
               <div class="absolute top-0 right-0 w-20 h-20 bg-blue-100 rounded-full -mr-8 -mt-8 group-hover:scale-110 transition-transform duration-300 blur-lg"></div>
               <div class="w-12 h-12 m-auto bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center mb-5 shadow-lg group-hover:scale-110 transition-transform duration-300">
@@ -124,7 +124,7 @@
           </div>
 
           <!-- AI Study Assistant Card -->
-          <div class="bg-white gap-2 rounded-2xl p-7 text-gray-900 relative overflow-hidden group shadow-2xl border border-green-100 hover:shadow-green-200 transition-all duration-300 hover:-translate-y-2 hover:scale-105 min-h-[300px] flex flex-col justify-between w-full max-w-[380px] md:max-w-[420px] mx-auto">
+          <div class="bg-white gap-2 rounded-2xl p-7 text-gray-900 relative overflow-hidden group shadow-2xl border border-green-100 hover:shadow-green-200 transition-all duration-300 hover:-translate-y-2 hover:scale-105 min-h-[300px] flex flex-col justify-between w-full max-w-[380px] md:max-w-[420px] mx-auto animate-scale-in stagger-2">
             <div>
               <div class="absolute top-0 right-0 w-20 h-20 bg-green-100 rounded-full -mr-8 -mt-8 group-hover:scale-110 transition-transform duration-300 blur-lg"></div>
               <div class="w-12 h-12 m-auto bg-gradient-to-br from-green-500 to-emerald-400 rounded-2xl flex items-center justify-center mb-5 shadow-lg group-hover:scale-110 transition-transform duration-300">
@@ -143,7 +143,7 @@
           </div>
 
           <!-- Interactive Flashcards Card -->
-          <div class="bg-white gap-2 rounded-2xl p-7 text-gray-900 relative overflow-hidden group shadow-2xl border border-cyan-100 hover:shadow-cyan-200 transition-all duration-300 hover:-translate-y-2 hover:scale-105 min-h-[300px] flex flex-col justify-between w-full max-w-[380px] md:max-w-[420px] mx-auto">
+          <div class="bg-white gap-2 rounded-2xl p-7 text-gray-900 relative overflow-hidden group shadow-2xl border border-cyan-100 hover:shadow-cyan-200 transition-all duration-300 hover:-translate-y-2 hover:scale-105 min-h-[300px] flex flex-col justify-between w-full max-w-[380px] md:max-w-[420px] mx-auto animate-scale-in stagger-3">
             <div>
               <div class="absolute top-0 right-0 w-20 h-20 bg-cyan-100 rounded-full -mr-8 -mt-8 group-hover:scale-110 transition-transform duration-300 blur-lg"></div>
               <div class="w-12 h-12 m-auto bg-gradient-to-br from-cyan-500 to-blue-400 rounded-2xl flex items-center justify-center mb-5 shadow-lg group-hover:scale-110 transition-transform duration-300">
@@ -162,7 +162,7 @@
           </div>
 
           <!-- Adaptive Quizzes Card -->
-          <div class="bg-white gap-2 rounded-2xl p-7 text-gray-900 relative overflow-hidden group shadow-2xl border border-purple-100 hover:shadow-purple-200 transition-all duration-300 hover:-translate-y-2 hover:scale-105 min-h-[300px] flex flex-col justify-between w-full max-w-[380px] md:max-w-[420px] mx-auto">
+          <div class="bg-white gap-2 rounded-2xl p-7 text-gray-900 relative overflow-hidden group shadow-2xl border border-purple-100 hover:shadow-purple-200 transition-all duration-300 hover:-translate-y-2 hover:scale-105 min-h-[300px] flex flex-col justify-between w-full max-w-[380px] md:max-w-[420px] mx-auto animate-scale-in stagger-4">
             <div>
               <div class="absolute top-0 right-0 w-20 h-20 bg-purple-100 rounded-full -mr-8 -mt-8 group-hover:scale-110 transition-transform duration-300 blur-lg"></div>
               <div class="w-12 h-12 m-auto bg-gradient-to-br from-purple-500 to-pink-400 rounded-2xl flex items-center justify-center mb-5 shadow-lg group-hover:scale-110 transition-transform duration-300">
@@ -185,17 +185,17 @@
   </div>
 
   <!-- Features Section -->
-  <section id="features" class="px-6 py-16 lg:py-24 bg-white/50">
+  <section id="features" class="px-6 py-16 lg:py-24 bg-white/50" data-animate="true">
     <div class="max-w-5xl mx-auto">
       <div class="text-center mb-16">
-        <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">Why Choose InceptIQ?</h2>
-        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 animate-fade-in-up">Why Choose InceptIQ?</h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto animate-fade-in-up stagger-1">
           Experience the future of learning with our AI-powered platform designed to make knowledge acquisition effortless and engaging.
         </p>
       </div>
 
       <div class="grid lg:grid-cols-2 gap-12 items-center">
-        <div class="space-y-8">
+        <div class="space-y-8 animate-slide-in-left">
           <div class="flex items-start gap-4">
             <div class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
               <span class="pi pi-bolt text-xl text-white animate-pulse"></span>
@@ -233,7 +233,7 @@
             </div>
           </div>
         </div>
-        <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-3xl p-8 shadow-xl">
+        <div class="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-3xl p-8 shadow-xl animate-slide-in-right">
           <div class="space-y-6">
             <div class="bg-white rounded-2xl p-6 shadow-lg">
               <div class="flex items-center gap-3 mb-3">
@@ -278,18 +278,18 @@
   </section>
 
   <!-- Pricing Section -->
-  <section id="pricing" class="px-6 py-16 lg:py-24 bg-gradient-to-br from-gray-50 to-blue-50">
+  <section id="pricing" class="px-6 py-16 lg:py-24 bg-gradient-to-br from-gray-50 to-blue-50" data-animate="true">
     <div class="max-w-6xl mx-auto">
       <div class="text-center mb-16">
-        <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">Simple, Transparent Pricing</h2>
-        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 animate-fade-in-up">Simple, Transparent Pricing</h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto animate-fade-in-up stagger-1">
           Choose the plan that fits your learning needs. Pay only for what you use.
         </p>
       </div>
 
       <div class="grid md:grid-cols-3 gap-8">
         <!-- Starter Plan -->
-        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300">
+        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 animate-scale-in stagger-1 hover-lift">
           <div class="text-center mb-6">
             <h3 class="text-2xl font-bold text-gray-900 mb-2">Starter</h3>
             <div class="text-4xl font-bold text-blue-600 mb-2">$1.99</div>
@@ -325,7 +325,7 @@
         </div>
 
         <!-- Explorer Plan -->
-        <div class="bg-white rounded-2xl p-8 shadow-xl border-2 border-blue-200 relative transform scale-105">
+        <div class="bg-white rounded-2xl p-8 shadow-xl border-2 border-blue-200 relative transform scale-105 animate-scale-in stagger-2 hover-lift">
           <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
             <span class="bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-4 py-1 rounded-full text-sm font-semibold">Most Popular</span>
           </div>
@@ -364,7 +364,7 @@
         </div>
 
         <!-- Pro Plan -->
-        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300">
+        <div class="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-all duration-300 animate-scale-in stagger-3 hover-lift">
           <div class="text-center mb-6">
             <h3 class="text-2xl font-bold text-gray-900 mb-2">Pro</h3>
             <div class="text-4xl font-bold text-blue-600 mb-2">$9.99</div>
@@ -401,15 +401,15 @@
       </div>
 
       <!-- Credit System Explanation -->
-      <div class="mt-16 bg-white rounded-2xl p-8 shadow-lg border border-gray-200">
+      <div class="mt-16 bg-white rounded-2xl p-8 shadow-lg border border-gray-200 animate-fade-in-up">
         <div class="text-center mb-8">
-          <h3 class="text-2xl font-bold text-gray-900 mb-4">How Our Credit System Works</h3>
-          <p class="text-gray-600 max-w-2xl mx-auto">
+          <h3 class="text-2xl font-bold text-gray-900 mb-4 animate-fade-in-up">How Our Credit System Works</h3>
+          <p class="text-gray-600 max-w-2xl mx-auto animate-fade-in-up stagger-1">
             Our credit-based system ensures you only pay for what you use. Each AI-powered feature costs a specific number of credits.
           </p>
         </div>
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div class="text-center p-4 bg-blue-50 rounded-xl">
+          <div class="text-center p-4 bg-blue-50 rounded-xl animate-scale-in stagger-1 hover-lift">
             <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-3">
               <span class="pi pi-file text-white text-xl"></span>
             </div>
@@ -417,7 +417,7 @@
             <p class="text-2xl font-bold text-blue-600">1 Credit</p>
             <p class="text-sm text-gray-600 mt-1">Per document</p>
           </div>
-          <div class="text-center p-4 bg-cyan-50 rounded-xl">
+          <div class="text-center p-4 bg-cyan-50 rounded-xl animate-scale-in stagger-2 hover-lift">
             <div class="w-12 h-12 bg-cyan-500 rounded-full flex items-center justify-center mx-auto mb-3">
               <span class="pi pi-lightbulb text-white text-xl"></span>
             </div>
@@ -425,7 +425,7 @@
             <p class="text-2xl font-bold text-cyan-600">1 Credit</p>
             <p class="text-sm text-gray-600 mt-1">Per document</p>
           </div>
-          <div class="text-center p-4 bg-purple-50 rounded-xl">
+          <div class="text-center p-4 bg-purple-50 rounded-xl animate-scale-in stagger-3 hover-lift">
             <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-3">
               <span class="pi pi-question-circle text-white text-xl"></span>
             </div>
@@ -433,7 +433,7 @@
             <p class="text-2xl font-bold text-purple-600">1 Credit</p>
             <p class="text-sm text-gray-600 mt-1">Per document</p>
           </div>
-          <div class="text-center p-4 bg-emerald-50 rounded-xl">
+          <div class="text-center p-4 bg-emerald-50 rounded-xl animate-scale-in stagger-4 hover-lift">
             <div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-3">
               <span class="pi pi-comments text-white text-xl"></span>
             </div>
@@ -447,7 +447,7 @@
   </section>
 
   <!-- How It Works Section -->
-  <section id="how-it-works" class="px-6 py-16 lg:py-24">
+  <section id="how-it-works" class="px-6 py-16 lg:py-24" data-animate="true">
     <div class="max-w-5xl mx-auto">
       <div class="text-center mb-16">
         <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">How It Works</h2>
@@ -483,7 +483,7 @@
   </section>
 
   <!-- Testimonials Section -->
-  <section class="px-6 py-16 lg:py-24 bg-white/50">
+  <section class="px-6 py-16 lg:py-24 bg-white/50" data-animate="true">
     <div class="max-w-5xl mx-auto">
       <div class="text-center mb-16">
         <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">What Our Users Say</h2>
@@ -534,30 +534,30 @@
   </section>
 
   <!-- CTA Section -->
-  <section class="px-6 py-16 lg:py-24">
+  <section class="px-6 py-16 lg:py-24" data-animate="true">
     <div class="max-w-4xl mx-auto text-center">
-      <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6">Ready to Transform Your Learning?</h2>
+      <h2 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 animate-fade-in-up">Ready to Transform Your Learning?</h2>
       <p class="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
         Join thousands of learners who are already accelerating their knowledge acquisition with AI-powered tools.
       </p>
       
       <!-- Value Proposition Cards -->
       <div class="grid md:grid-cols-3 gap-6 mb-8">
-        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover-lift">
           <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <span class="pi pi-gift text-green-600 text-xl"></span>
           </div>
           <h3 class="font-bold text-gray-900 mb-2">Free Welcome Bonus</h3>
           <p class="text-sm text-gray-600">Get 5 free credits to start your learning journey</p>
         </div>
-        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover-lift">
           <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <span class="pi pi-dollar text-blue-600 text-xl"></span>
           </div>
           <h3 class="font-bold text-gray-900 mb-2">Pay Per Use</h3>
           <p class="text-sm text-gray-600">Only pay for the AI features you actually use</p>
         </div>
-        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
+        <div class="bg-white rounded-xl p-6 shadow-lg border border-gray-100 hover-lift">
           <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <span class="pi pi-rocket text-purple-600 text-xl"></span>
           </div>
@@ -620,4 +620,21 @@
       </div>
     </div>
   </footer>
+
+  <!-- Floating Action Button -->
+  <div class="fixed bottom-8 right-8 z-50">
+    <button 
+      (click)="getStarted()"
+      class="w-16 h-16 bg-gradient-to-r from-blue-600 to-cyan-500 text-white rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-110 animate-float">
+      <span class="pi pi-rocket text-xl"></span>
+    </button>
+  </div>
+
+  <!-- Scroll to Top Button -->
+  <button 
+    (click)="scrollToTop()"
+    class="fixed bottom-8 left-8 z-50 w-12 h-12 bg-gray-800 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 opacity-0 hover:opacity-100"
+    id="scrollToTop">
+    <span class="pi pi-arrow-up text-lg"></span>
+  </button>
 </div> 
