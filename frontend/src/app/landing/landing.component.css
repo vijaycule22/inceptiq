@@ -110,6 +110,46 @@
   animation: fadeInUp 0.8s ease-out forwards;
 }
 
+/* Initial state for sections that will be animated */
+section[data-animate="true"] {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+/* Ensure hero section is always visible */
+#hero {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+/* When section becomes visible */
+section[data-animate="true"].scroll-animated {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Smooth transition for child elements */
+section[data-animate="true"] .animate-fade-in-up {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out 0.2s, transform 0.6s ease-out 0.2s;
+}
+
+section[data-animate="true"].scroll-animated .animate-fade-in-up {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Ensure smooth transitions for all animated elements */
+.animate-fade-in-up,
+.animate-slide-in-left,
+.animate-slide-in-right,
+.animate-scale-in {
+  will-change: opacity, transform;
+  backface-visibility: hidden;
+}
+
 /* Staggered animations */
 .stagger-1 { animation-delay: 0.1s; }
 .stagger-2 { animation-delay: 0.2s; }

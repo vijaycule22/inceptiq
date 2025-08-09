@@ -17,7 +17,10 @@ export class LandingComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.initializeScrollAnimations();
+    // Small delay to ensure DOM is fully ready
+    setTimeout(() => {
+      this.initializeScrollAnimations();
+    }, 100);
   }
 
   getStarted() {
@@ -40,15 +43,18 @@ export class LandingComponent implements OnInit, AfterViewInit {
           if (entry.isIntersecting) {
             // Only add animation if it doesn't already have it
             if (!entry.target.classList.contains('scroll-animated')) {
-              entry.target.classList.add('scroll-animated');
-              entry.target.classList.add('animate-fade-in-up');
+              // Small delay to prevent flash
+              setTimeout(() => {
+                entry.target.classList.add('scroll-animated');
+                entry.target.classList.add('animate-fade-in-up');
+              }, 50);
             }
           }
         });
       },
       {
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px',
+        threshold: 0.15,
+        rootMargin: '0px 0px -50px 0px',
       }
     );
 
